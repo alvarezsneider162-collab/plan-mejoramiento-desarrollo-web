@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="160" viewBox="0 0 640 160" role="img" aria-label="La Carambola Dorada — Gestión de salones de billar">
+  <defs>
+    <linearGradient id="pano" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F5132"/>
+      <stop offset="1" stop-color="#0A3A24"/>
+    </linearGradient>
+    <clipPath id="badgeClip">
+      <rect x="16" y="20" width="120" height="120" rx="26"/>
+    </clipPath>
+    <radialGradient id="bolaBlanca" cx="0.36" cy="0.32" r="0.78">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.62" stop-color="#F1F4F1"/>
+      <stop offset="1" stop-color="#C2CFC6"/>
+    </radialGradient>
+    <radialGradient id="bolaDorada" cx="0.36" cy="0.32" r="0.78">
+      <stop offset="0" stop-color="#E8CE86"/>
+      <stop offset="0.6" stop-color="#C9A227"/>
+      <stop offset="1" stop-color="#7A5C10"/>
+    </radialGradient>
+    <style>
+      .nombre   { font-family: Georgia, 'Times New Roman', Times, serif; font-weight: 700; font-size: 36px; fill: #14201A; letter-spacing: 0.5px; }
+      .nombre-d { font-family: Georgia, 'Times New Roman', Times, serif; font-weight: 700; font-size: 36px; fill: #8A6100; letter-spacing: 0.5px; }
+      .lema     { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; font-weight: 600; font-size: 10px; fill: #4E5F56; letter-spacing: 2.6px; }
+    </style>
+  </defs>
+
+  <!-- ================= ISOTIPO: trayectoria de carambola ================= -->
+  <g>
+    <rect x="16" y="20" width="120" height="120" rx="26" fill="url(#pano)"/>
+
+    <g clip-path="url(#badgeClip)">
+      <!-- Brillo y sombra internos -->
+      <circle cx="40" cy="24" r="84" fill="#FFFFFF" opacity="0.07"/>
+      <circle cx="114" cy="140" r="84" fill="#000000" opacity="0.16"/>
+      <!-- Paño: trama sutil del fieltro -->
+      <path d="M 16 44 H 136 M 16 68 H 136 M 16 92 H 136 M 16 116 H 136" stroke="#FFFFFF" stroke-width="0.6" opacity="0.07"/>
+    </g>
+
+    <!-- Trazado del ocho: recorrido en figure-eight de un carambola -->
+    <path d="M 76 80
+             C 60 80 46 70 46 58
+             C 46 45 60 38 76 38
+             C 92 38 106 45 106 58
+             C 106 70 92 80 76 80
+             C 60 80 46 90 46 102
+             C 46 115 60 122 76 122
+             C 92 122 106 115 106 102
+             C 106 90 92 80 76 80 Z"
+          fill="none" stroke="#C9A227" stroke-width="7"
+          stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Bola blanca (billa de salida) sobre la trayectoria -->
+    <circle cx="56" cy="45" r="14" fill="url(#bolaBlanca)"/>
+    <circle cx="56" cy="45" r="14" fill="none" stroke="#0A3A24" stroke-width="1" opacity="0.35"/>
+    <circle cx="51.5" cy="40.5" r="4" fill="#FFFFFF" opacity="0.9"/>
+
+    <!-- Bola dorada (billa objeto) en el bucle inferior -->
+    <circle cx="97" cy="112" r="10.5" fill="url(#bolaDorada)"/>
+    <circle cx="97" cy="112" r="10.5" fill="none" stroke="#0A3A24" stroke-width="1" opacity="0.4"/>
+    <circle cx="93.8" cy="108.8" r="3" fill="#FFFFFF" opacity="0.55"/>
+
+    <!-- Tiza: único acento frío de la marca -->
+    <circle cx="34" cy="112" r="3.4" fill="#6FBEDC"/>
+  </g>
+
+  <!-- Separador vertical -->
+  <line x1="154" y1="46" x2="154" y2="134" stroke="#D6DBD2" stroke-width="2"/>
+
+  <!-- ================= WORDMARK ================= -->
+  <text x="176" y="56" class="nombre">LA CARAMBOLA</text>
+  <text x="176" y="94" class="nombre-d">DORADA</text>
+  <rect x="176" y="110" width="78" height="3" rx="1.5" fill="#8A6100"/>
+  <text x="177" y="134" class="lema">GESTIÓN DE SALONES DE BILLAR</text>
+</svg>

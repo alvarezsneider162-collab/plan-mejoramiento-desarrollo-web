@@ -1,0 +1,69 @@
+/* ==========================================================================
+   LA CARAMBOLA DORADA — Tokens de diseño (Actividad de recuperación, Día 2)
+   Archivo: css/tokens.css
+   Marca: software de gestión para salones de billar.
+   Paleta verificada con WebAIM (WCAG 2.1, nivel AA como piso).
+   Las relaciones de contraste indicadas en cada comentario son las medidas
+   por el autor contra el fondo indicado; ninguna combinación de texto queda
+   por debajo de 4.5:1.
+   ========================================================================== */
+
+:root {
+
+  /* --------------------------------------------------------------------------
+   * 1. Colores Principales de Marca (verde paño de billar y oro)
+   * -------------------------------------------------------------------------- */
+  --color-marca:        #0F5132;   /* Verde paño de la mesa. Blanco encima: 9.36:1 */
+  --color-marca-hover:  #0A3A24;   /* Verde profundo para hover/active. Blanco: 12.78:1 */
+  --color-marca-light:  #E6F2EA;   /* Verde muy suave: fondos de sección y estados */
+
+  --color-oro:          #8A6100;   /* Oro antiguo. Sobre marfil: 5.27:1 · sobre blanco: 5.54:1 */
+  --color-oro-tenue:    #F0E2BC;   /* Oro claro. Sobre verde marca: 7.27:1 (detalle sobre oscuro) */
+
+  /* --------------------------------------------------------------------------
+   * 2. Colores de Fondo y Superficie
+   * -------------------------------------------------------------------------- */
+  --color-bg-main:      #FBF9F4;   /* Fondo marfil tipo bola de billar. Texto principal: 15.95:1 */
+  --color-surface:      #FFFFFF;   /* Superficie blanca para tarjetas, modales y tablas */
+  --color-surface-alt:  #F1EEE4;   /* Superficie alternativa para filas alternas de tabla */
+
+  /* --------------------------------------------------------------------------
+   * 3. Colores de Tipografía y Textos
+   * -------------------------------------------------------------------------- */
+  --color-text-main:    #14201A;   /* Verde casi negro. 15.95:1 sobre marfil · 16.78:1 sobre blanco */
+  --color-text-muted:   #4E5F56;   /* Gris verdoso. 6.45:1 sobre marfil · 5.90:1 sobre verde suave */
+  --color-text-inverse: #FFFFFF;   /* Texto blanco sobre botones oscuros y encabezados */
+
+  --color-link:         #0F5132;   /* Enlaces. 8.90:1 sobre marfil · 9.36:1 sobre blanco */
+
+  /* --------------------------------------------------------------------------
+   * 4. Colores de Estado / Alertas del Sistema
+   *    Todos verificados sobre --color-bg-main (#FBF9F4).
+   *    Usar siempre con ícono + texto: nunca comunicar estado solo por color.
+   * -------------------------------------------------------------------------- */
+  --color-success:      #15803D;   /* Verde éxito: mesa liberada, cobro registrado. 4.77:1 */
+  --color-warning:      #8A5300;   /* Ámbar cálido: tiempo de mesa por vencer. 6.02:1 */
+  --color-error:        #B3261E;   /* Rojo: mesa ocupada en conflicto o cobro fallido. 6.21:1 */
+  --color-info:         #15506B;   /* Azul pizarra: sesión activa, avisos de datos. 8.35:1 */
+
+  /* --------------------------------------------------------------------------
+   * 5. Bordes, Separadores y Sombras
+   * -------------------------------------------------------------------------- */
+  --border-color:       #D6DBD2;   /* Separadores decorativos. NO usar como único indicador */
+  --border-control:     #7E8D81;   /* Contorno de campos y botones: 3.49:1 (WCAG 1.4.11) */
+  --focus-ring:         #0F5132;   /* Anillo de foco: 8.90:1 sobre marfil */
+
+  --shadow-sm:  0 1px 3px rgba(15, 81, 50, 0.10);   /* Sutil, tarjetas en reposo */
+  --shadow-md:  0 4px 6px -1px rgba(15, 81, 50, 0.15); /* Botones y modales */
+  --shadow-lg:  0 10px 20px -6px rgba(15, 81, 50, 0.20); /* Diálogos */
+
+  /* --------------------------------------------------------------------------
+   * 6. Tipografía
+   * -------------------------------------------------------------------------- */
+  --font-display: Georgia, 'Times New Roman', Times, serif; /* Títulos: carácter de sala clásica */
+  --font-body: 'Segoe UI', Arial, Helvetica, sans-serif;     /* Interfaz y datos */
+
+  --radius-sm: 6px;   /* Botones pequeños, badges */
+  --radius-md: 10px;  /* Tarjetas, campos de formulario */
+  --radius-lg: 26px;  /* Isotipo del logo */
+}
