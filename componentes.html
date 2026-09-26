@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Componentes — La Carambola Dorada</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <div class="panel">
+
+    <header class="panel__barra">
+      <button type="button" class="boton-menu" aria-controls="menu-lateral" aria-expanded="false">
+        <span class="boton-menu__icono" aria-hidden="true"></span>
+        <span class="boton-menu__texto">Menú</span>
+      </button>
+      <img src="assets/img/logo.svg" alt="La Carambola Dorada">
+      <p class="panel__sesion">
+        <strong>Guía de estilo</strong> &middot; Día 6
+      </p>
+    </header>
+
+    <aside class="panel__menu abierto" id="menu-lateral">
+      <nav aria-labelledby="menu-titulo-lateral">
+        <h2 id="menu-titulo-lateral">Menú principal</h2>
+        <ul>
+          <li><a href="dashboard.html">Tablero</a></li>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="componentes.html" aria-current="page">Componentes</a></li>
+          <li><a href="login.html">Cerrar sesión</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="panel__contenido">
+      <h1>Componentes</h1>
+      <p>Esta página es la guía de estilo del proyecto: todo lo que se usa en el
+      prototipo está aquí con sus estados. Sirve de referencia para el día 8,
+      cuando el menú se conecte a JavaScript.</p>
+
+      <!-- ============ PUNTOS DE QUIEBRE ============ -->
+      <section>
+        <h2>Puntos de quiebre</h2>
+        <p>La hoja de estilos se escribe de abajo hacia arriba: lo que está fuera de
+        cualquier <code>@media</code> es el teléfono, y cada <code>min-width</code>
+        va encendiendo cosas. En todo el archivo no hay ni un
+        <code>@media (max-width: …)</code>.</p>
+
+        <table class="tabla-productos">
+          <caption>Los cinco puntos de quiebre y qué enciende cada uno</caption>
+          <thead>
+            <tr>
+              <th scope="col">Punto</th>
+              <th scope="col">Media query</th>
+              <th scope="col">Px</th>
+              <th scope="col">Qué cambia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">base</th>
+              <td data-label="Media query">(ninguna)</td>
+              <td data-label="Px">0 – 639</td>
+              <td data-label="Qué cambia">Teléfono: una columna, menú fuera de pantalla, tabla apilada en tarjetas</td>
+            </tr>
+            <tr>
+              <th scope="row">sm</th>
+              <td data-label="Media query">min-width: 40rem</td>
+              <td data-label="Px">640</td>
+              <td data-label="Qué cambia">Cabecera en fila, dos tarjetas por fila, más aire</td>
+            </tr>
+            <tr>
+              <th scope="row">md</th>
+              <td data-label="Media query">min-width: 48rem</td>
+              <td data-label="Px">768</td>
+              <td data-label="Qué cambia">La tabla vuelve a ser tabla, tres tarjetas por fila</td>
+            </tr>
+            <tr>
+              <th scope="row">lg</th>
+              <td data-label="Media query">min-width: 64rem</td>
+              <td data-label="Px">1024</td>
+              <td data-label="Qué cambia">El menú pasa a columna fija de 240 px y se oculta el botón, tablero a dos columnas</td>
+            </tr>
+            <tr>
+              <th scope="row">xl</th>
+              <td data-label="Media query">min-width: 90rem</td>
+              <td data-label="Px">1440</td>
+              <td data-label="Qué cambia">Ancho máximo de contenido</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ============ COLORES ============ -->
+      <section>
+        <h2>Color</h2>
+        <p>Ningún color está escrito suelto en la hoja: todo sale de una variable de
+        <code>css/tokens.css</code>. Cada estado se comunica con <strong>texto
+        además de color</strong>, nunca solo con el color.</p>
+
+        <h3>Los cinco estados</h3>
+        <ul class="lista-alertas">
+          <li class="alerta alerta--exito"><span class="badge badge--exito">Éxito</span> &nbsp;Mesa liberada, cobro registrado.</li>
+          <li class="alerta alerta--advertencia"><span class="badge badge--advertencia">Advertencia</span> &nbsp;Tiempo de mesa por vencer.</li>
+          <li class="alerta alerta--error"><span class="badge badge--error">Error</span> &nbsp;Cobro fallido, mesa en conflicto.</li>
+          <li class="alerta alerta--info"><span class="badge badge--info">Información</span> &nbsp;Sesión activa, aviso de datos.</li>
+          <li class="alerta alerta--neutro"><span class="badge badge--neutro">Neutro</span> &nbsp;Sin datos todavía.</li>
+        </ul>
+      </section>
+
+      <!-- ============ TIPOGRAFIA ============ -->
+      <section>
+        <h2>Tipografía</h2>
+        <p>Cinco tamaños, todos desde variables <code>--tipo-*</code>. Ningún
+        <code>font-size</code> directo en la hoja.</p>
+        <p>
+          <code>--tipo-xs</code> 14 px — auxiliar<br>
+          <code>--tipo-sm</code> 16 px — cuerpo y etiquetas<br>
+          <code>--tipo-md</code> 20 px — subtítulos<br>
+          <code>--tipo-lg</code> 24 px — títulos de sección<br>
+          <code>--tipo-xl</code> 30 px — título principal
+        </p>
+      </section>
+
+      <!-- ============ BOTON ============ -->
+      <section>
+        <h2>Botón</h2>
+        <p>Los <strong>cinco estados</strong>. Los tres del medio no se pueden
+        fotografiar con una captura estática, porque el navegador solo los aplica
+        cuando hay puntero o pulsación de verdad; por eso las clases
+        <code>es-hover</code>, <code>es-active</code>, <code>es-focus</code> y
+        <code>es-disabled</code> repintan a mano esos mismos estados.</p>
+
+        <table class="tabla-productos">
+          <caption>Botón primario: los cinco estados</caption>
+          <thead>
+            <tr>
+              <th scope="col">Estado</th>
+              <th scope="col">Se aplica con</th>
+              <th scope="col">Cómo se ve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1. Reposo</th>
+              <td data-label="Se aplica con">sin pseudo-clase</td>
+              <td data-label="Cómo se ve"><span class="boton">Registrar</span></td>
+            </tr>
+            <tr>
+              <th scope="row">2. Hover</th>
+              <td data-label="Se aplica con">:hover</td>
+              <td data-label="Cómo se ve"><span class="boton es-hover">Registrar</span></td>
+            </tr>
+            <tr>
+              <th scope="row">3. Foco</th>
+              <td data-label="Se aplica con">:focus-visible</td>
+              <td data-label="Cómo se ve"><span class="boton es-focus">Registrar</span></td>
+            </tr>
+            <tr>
+              <th scope="row">4. Activo</th>
+              <td data-label="Se aplica con">:active</td>
+              <td data-label="Cómo se ve"><span class="boton es-active">Registrar</span></td>
+            </tr>
+            <tr>
+              <th scope="row">5. Deshabilitado</th>
+              <td data-label="Se aplica con">:disabled</td>
+              <td data-label="Cómo se ve"><span class="boton es-disabled" aria-disabled="true">Registrar</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Variante secundaria</h3>
+        <p>
+          <span class="boton boton--secundario">Cancelar</span>
+          <span class="boton boton--secundario es-hover">Cancelar</span>
+          <span class="boton boton--secundario es-focus">Cancelar</span>
+          <span class="boton boton--secundario es-disabled" aria-disabled="true">Cancelar</span>
+        </p>
+      </section>
+
+      <!-- ============ CAMPOS ============ -->
+      <section>
+        <h2>Campos de formulario</h2>
+        <p>Los <strong>cinco estados</strong>, más el estado de error, que se marca
+        con <code>aria-invalid="true"</code> en el HTML y no con una clase, para
+        que el error quede en el marcado.</p>
+
+        <table class="tabla-productos">
+          <caption>Campo de texto: los cinco estados y el de error</caption>
+          <thead>
+            <tr>
+              <th scope="col">Estado</th>
+              <th scope="col">Se aplica con</th>
+              <th scope="col">Cómo se ve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1. Reposo</th>
+              <td data-label="Se aplica con">sin pseudo-clase</td>
+              <td data-label="Cómo se ve"><label class="rotulo-demo" for="d1">Correo</label><input class="campo" id="d1" type="email" placeholder="nombre@correo.com"></td>
+            </tr>
+            <tr>
+              <th scope="row">2. Hover</th>
+              <td data-label="Se aplica con">:hover</td>
+              <td data-label="Cómo se ve"><label class="rotulo-demo" for="d2">Correo</label><input class="campo es-hover" id="d2" type="email" placeholder="nombre@correo.com"></td>
+            </tr>
+            <tr>
+              <th scope="row">3. Foco</th>
+              <td data-label="Se aplica con">:focus-visible</td>
+              <td data-label="Cómo se ve"><label class="rotulo-demo" for="d3">Correo</label><input class="campo es-focus" id="d3" type="email" placeholder="nombre@correo.com"></td>
+            </tr>
+            <tr>
+              <th scope="row">4. Activo</th>
+              <td data-label="Se aplica con">:active</td>
+              <td data-label="Cómo se ve"><label class="rotulo-demo" for="d4">Correo</label><input class="campo es-active" id="d4" type="email" value="sneider@correo.com"></td>
+            </tr>
+            <tr>
+              <th scope="row">5. Deshabilitado</th>
+              <td data-label="Se aplica con">:disabled</td>
+              <td data-label="Cómo se ve"><label class="rotulo-demo" for="d5">Correo</label><input class="campo es-disabled" id="d5" type="email" value="bloqueado@correo.com" disabled></td>
+            </tr>
+            <tr>
+              <th scope="row">Error</th>
+              <td data-label="Se aplica con">aria-invalid="true"</td>
+              <td data-label="Cómo se ve"><label class="rotulo-demo" for="d6">Correo</label><input class="campo es-invalid" id="d6" type="email" value="sneider@correo" aria-invalid="true"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Otros controles</h3>
+        <fieldset>
+          <legend>Selector y área de texto</legend>
+          <label for="c1">Categoría</label>
+          <select id="c1" name="c1">
+            <option value="">Seleccione una categoría</option>
+            <option value="1" selected>Implemento de juego</option>
+            <option value="2">Consumible</option>
+          </select>
+
+          <label for="c2">Descripción</label>
+          <textarea id="c2" name="c2" rows="2" placeholder="Detalle del implemento"></textarea>
+
+          <label for="c3">Cantidad</label>
+          <input type="number" id="c3" name="c3" value="8" min="1" step="1">
+
+          <label for="c4">Existencias (deshabilitado)</label>
+          <input type="number" id="c4" name="c4" value="0" disabled>
+        </fieldset>
+
+        <fieldset>
+          <legend>Selección</legend>
+          <input type="radio" id="r1" name="condicion-demo" value="nuevo" checked>
+          <label for="r1">Nuevo</label>
+          <input type="radio" id="r2" name="condicion-demo" value="semi">
+          <label for="r2">Semi-nuevo</label>
+          <input type="checkbox" id="k1" name="alquiler">
+          <label for="k1">Disponible para alquiler</label>
+        </fieldset>
+      </section>
+
+      <!-- ============ TARJETA ============ -->
+      <section>
+        <h2>Tarjeta de indicador</h2>
+        <p>Base con <code>repeat(auto-fit, minmax(160px, 1fr))</code>: se reacomoda
+        sola al angostar la ventana.</p>
+        <div class="indicadores">
+          <article class="tarjeta">
+            <h3>Reposo</h3>
+            <p>5 de 8</p>
+          </article>
+          <article class="tarjeta es-hover">
+            <h3>Hover</h3>
+            <p>3</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ ENLACES ============ -->
+      <section>
+        <h2>Enlaces</h2>
+        <ul class="lista-enlaces">
+          <li><a class="enlace" href="#">1. Reposo</a></li>
+          <li><a class="enlace es-visited" href="#">2. Visitado</a></li>
+          <li><a class="enlace es-hover" href="#">3. Hover</a></li>
+          <li><a class="enlace es-focus" href="#">4. Foco</a></li>
+          <li><a class="enlace es-active" href="#">5. Actual</a></li>
+        </ul>
+      </section>
+
+      <!-- ============ TABLA ============ -->
+      <section>
+        <h2>Tabla</h2>
+        <p>En el teléfono cada fila es una tarjeta; desde <code>md</code>
+        (768&nbsp;px) vuelve a ser tabla. En esta página, ábrela en 360&nbsp;px y
+        en 1024&nbsp;px para ver las dos formas.</p>
+        <div class="tabla-scroll">
+        <table class="tabla-productos">
+          <caption>Ejemplo con fila en reposo y fila con hover</caption>
+          <thead>
+            <tr>
+              <th scope="col">Mesa</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Jugador actual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Mesa 1</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Jhon Ballén</td></tr>
+            <tr class="tabla-fila es-hover"><th scope="row">Mesa 2</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Andrea Ríos</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <!-- ============ ALERTAS ============ -->
+      <section>
+        <h2>Alertas</h2>
+        <ul class="lista-alertas">
+          <li class="alerta alerta--exito">La mesa 4 quedó libre y el cobro quedó registrado.</li>
+          <li class="alerta alerta--advertencia">La mesa 3 está por cumplir la hora pagada.</li>
+          <li class="alerta alerta--error">El cobro de la mesa 12 fue rechazado.</li>
+          <li class="alerta alerta--info">Se abrió una sesión de inventario en la tablet.</li>
+          <li class="alerta alerta--neutro">Todavía no hay datos de esta sala.</li>
+        </ul>
+      </section>
+
+      <!-- ============ MENU ============ -->
+      <section>
+        <h2>Menú lateral</h2>
+        <p>En el teléfono está fuera de pantalla y se abre con la clase
+        <code>abierto</code>, que hoy se aplica a mano en el HTML. El día 8 se
+        conectará a JavaScript. Cuando la persona pide menos movimiento
+        (<code>prefers-reduced-motion</code>), la transición directamente no se
+        declara, sin necesidad de <code>!important</code>.</p>
+        <p>
+          Estado cerrado: <code>transform: translateX(-100%)</code> con
+          <code>visibility: hidden</code>, para que el menú cerrado no reciba el
+          foco del teclado.<br>
+          Estado abierto: <code>transform: translateX(0)</code>.<br>
+          Desde <code>lg</code>: <code>position: static</code>, el menú siempre
+          visible y el botón desaparece.
+        </p>
+        <p>En esta página el menú está abierto a propósito para poder fotografiarlo.</p>
+      </section>
+
+    </main>
+
+    <footer class="panel__pie">
+      <p>La Carambola Dorada — Guía de estilo de componentes</p>
+    </footer>
+
+  </div>
+</body>
+</html>

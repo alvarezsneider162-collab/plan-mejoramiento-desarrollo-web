@@ -10,18 +10,23 @@
   <div class="panel">
 
     <header class="panel__barra">
+      <button type="button" class="boton-menu" aria-controls="menu-lateral" aria-expanded="false">
+        <span class="boton-menu__icono" aria-hidden="true"></span>
+        <span class="boton-menu__texto">Menú</span>
+      </button>
       <img src="assets/img/logo.svg" alt="La Carambola Dorada">
       <p class="panel__sesion">
         <strong>Sala 1</strong> &middot; Cajero: Sneider Alvarez
       </p>
     </header>
 
-    <aside class="panel__menu">
+    <aside class="panel__menu" id="menu-lateral">
       <nav aria-labelledby="menu-titulo-lateral">
         <h2 id="menu-titulo-lateral">Menú principal</h2>
         <ul>
           <li><a href="dashboard.html" aria-current="page">Tablero</a></li>
           <li><a href="productos.html">Productos</a></li>
+          <li><a href="componentes.html">Componentes</a></li>
           <li><a href="login.html">Cerrar sesión</a></li>
         </ul>
       </nav>
@@ -67,118 +72,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">Mesa 1</th>
-              <td>Ocupada</td>
-              <td>Jhon Ballén</td>
-              <td>18:05</td>
-              <td>35 min</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 2</th>
-              <td>Ocupada</td>
-              <td>Andrea Ríos</td>
-              <td>17:50</td>
-              <td>50 min</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 3</th>
-              <td>Ocupada</td>
-              <td>Derek Céspedes</td>
-              <td>17:20</td>
-              <td>1 h 20 min</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 4</th>
-              <td>Libre</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 5</th>
-              <td>Ocupada</td>
-              <td>Marcela Ortiz</td>
-              <td>18:30</td>
-              <td>10 min</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 6</th>
-              <td>Libre</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 7</th>
-              <td>Reservada</td>
-              <td>Turno de la noche</td>
-              <td>19:00</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 8</th>
-              <td>Libre</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 9</th>
-              <td>Libre</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 10</th>
-              <td>Ocupada</td>
-              <td>Camilo Torres</td>
-              <td>17:40</td>
-              <td>1 h 00 min</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 11</th>
-              <td>Libre</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 12</th>
-              <td>Ocupada</td>
-              <td>Laura Jiménez</td>
-              <td>18:15</td>
-              <td>25 min</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 13</th>
-              <td>Libre</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 14</th>
-              <td>Reservada</td>
-              <td>Evento privado</td>
-              <td>20:00</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 15</th>
-              <td>Libre</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <th scope="row">Mesa 16</th>
-              <td>Ocupada</td>
-              <td>Esteban Mora</td>
-              <td>17:55</td>
-              <td>45 min</td>
-            </tr>
+            <tr><th scope="row">Mesa 1</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Jhon Ballén</td><td data-label="Hora de inicio">18:05</td><td data-label="Tiempo jugado">35 min</td></tr>
+            <tr><th scope="row">Mesa 2</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Andrea Ríos</td><td data-label="Hora de inicio">17:50</td><td data-label="Tiempo jugado">50 min</td></tr>
+            <tr><th scope="row">Mesa 3</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Derek Céspedes</td><td data-label="Hora de inicio">17:20</td><td data-label="Tiempo jugado">1 h 20 min</td></tr>
+            <tr><th scope="row">Mesa 4</th><td data-label="Estado">Libre</td><td data-label="Jugador actual">—</td><td data-label="Hora de inicio">—</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 5</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Marcela Ortiz</td><td data-label="Hora de inicio">18:30</td><td data-label="Tiempo jugado">10 min</td></tr>
+            <tr><th scope="row">Mesa 6</th><td data-label="Estado">Libre</td><td data-label="Jugador actual">—</td><td data-label="Hora de inicio">—</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 7</th><td data-label="Estado">Reservada</td><td data-label="Jugador actual">Turno de la noche</td><td data-label="Hora de inicio">19:00</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 8</th><td data-label="Estado">Libre</td><td data-label="Jugador actual">—</td><td data-label="Hora de inicio">—</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 9</th><td data-label="Estado">Libre</td><td data-label="Jugador actual">—</td><td data-label="Hora de inicio">—</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 10</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Camilo Torres</td><td data-label="Hora de inicio">17:40</td><td data-label="Tiempo jugado">1 h 00 min</td></tr>
+            <tr><th scope="row">Mesa 11</th><td data-label="Estado">Libre</td><td data-label="Jugador actual">—</td><td data-label="Hora de inicio">—</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 12</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Laura Jiménez</td><td data-label="Hora de inicio">18:15</td><td data-label="Tiempo jugado">25 min</td></tr>
+            <tr><th scope="row">Mesa 13</th><td data-label="Estado">Libre</td><td data-label="Jugador actual">—</td><td data-label="Hora de inicio">—</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 14</th><td data-label="Estado">Reservada</td><td data-label="Jugador actual">Evento privado</td><td data-label="Hora de inicio">20:00</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 15</th><td data-label="Estado">Libre</td><td data-label="Jugador actual">—</td><td data-label="Hora de inicio">—</td><td data-label="Tiempo jugado">—</td></tr>
+            <tr><th scope="row">Mesa 16</th><td data-label="Estado">Ocupada</td><td data-label="Jugador actual">Esteban Mora</td><td data-label="Hora de inicio">17:55</td><td data-label="Tiempo jugado">45 min</td></tr>
           </tbody>
         </table>
         </div>
@@ -186,12 +95,12 @@
 
       <aside>
         <h2>Alertas</h2>
-        <ul>
-          <li>Mesa 3: faltan 5 minutos para completar la hora pagada.</li>
-          <li>Mesa 1: el jugador solicita 2 horas más de mesa.</li>
-          <li>Faltan 4 bolas de billar por devolver de un alquiler anterior.</li>
-          <li>Mesa 10: revisando tiempo de ocupación.</li>
-          <li>Mesa 16: próxima a cumplir hora de cobro.</li>
+        <ul class="lista-alertas">
+          <li class="alerta alerta--advertencia">Mesa 3: faltan 5 minutos para completar la hora pagada.</li>
+          <li class="alerta alerta--info">Mesa 1: el jugador solicita 2 horas más de mesa.</li>
+          <li class="alerta alerta--error">Faltan 4 bolas de billar por devolver de un alquiler anterior.</li>
+          <li class="alerta alerta--info">Mesa 10: revisando tiempo de ocupación.</li>
+          <li class="alerta alerta--advertencia">Mesa 16: próxima a cumplir hora de cobro.</li>
         </ul>
       </aside>
     </main>

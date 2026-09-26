@@ -7,25 +7,38 @@
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-  <header>
-    <img src="assets/img/logo.svg" alt="Logo de La Carambola Dorada" width="160">
+  <div class="panel">
 
-    <nav>
-      <h2 id="menu-titulo">Menú principal</h2>
-      <ul aria-labelledby="menu-titulo">
-        <li><a href="dashboard.html">Tablero</a></li>
-        <li><a href="productos.html" aria-current="page">Productos</a></li>
-        <li><a href="login.html">Cerrar sesión</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header class="panel__barra">
+      <button type="button" class="boton-menu" aria-controls="menu-lateral" aria-expanded="false">
+        <span class="boton-menu__icono" aria-hidden="true"></span>
+        <span class="boton-menu__texto">Menú</span>
+      </button>
+      <img src="assets/img/logo.svg" alt="La Carambola Dorada">
+      <p class="panel__sesion">
+        <strong>Inventario</strong> &middot; Sneider Alvarez
+      </p>
+    </header>
 
-  <main>
-    <h1>Productos</h1>
+    <aside class="panel__menu" id="menu-lateral">
+      <nav aria-labelledby="menu-titulo-lateral">
+        <h2 id="menu-titulo-lateral">Menú principal</h2>
+        <ul>
+          <li><a href="dashboard.html">Tablero</a></li>
+          <li><a href="productos.html" aria-current="page">Productos</a></li>
+          <li><a href="componentes.html">Componentes</a></li>
+          <li><a href="login.html">Cerrar sesión</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="panel__contenido">
+      <h1>Productos</h1>
 
     <section>
       <h2>Inventario del salón</h2>
 
+      <div class="tabla-scroll">
       <table class="tabla-productos">
         <caption>Implementos y consumibles disponibles para alquiler</caption>
         <thead>
@@ -39,64 +52,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">TAC-001</th>
-            <td>Taco de pool 1,45 m</td>
-            <td>Implemento de juego</td>
-            <td>Nuevo</td>
-            <td>8</td>
-            <td>$ 12.000</td>
-          </tr>
-          <tr>
-            <th scope="row">BOL-004</th>
-            <td>Juego de bolas de billar</td>
-            <td>Implemento de juego</td>
-            <td>Nuevo</td>
-            <td>3</td>
-            <td>$ 45.000</td>
-          </tr>
-          <tr>
-            <th scope="row">TRI-002</th>
-            <td>Triángulo para bolas</td>
-            <td>Implemento de juego</td>
-            <td>Nuevo</td>
-            <td>5</td>
-            <td>$ 8.000</td>
-          </tr>
-          <tr>
-            <th scope="row">TIZ-010</th>
-            <td>Tiza de billar</td>
-            <td>Consumible</td>
-            <td>Nuevo</td>
-            <td>24</td>
-            <td>$ 2.000</td>
-          </tr>
-          <tr>
-            <th scope="row">GUA-003</th>
-            <td>Guantes de fibra</td>
-            <td>Consumible</td>
-            <td>Semi-nuevo</td>
-            <td>6</td>
-            <td>$ 15.000</td>
-          </tr>
-          <tr>
-            <th scope="row">EXT-005</th>
-            <td>Extensión de taco</td>
-            <td>Implemento de juego</td>
-            <td>En reparación</td>
-            <td>1</td>
-            <td>$ 10.000</td>
-          </tr>
-          <tr>
-            <th scope="row">MES-008</th>
-            <td>Mesa de billar 8 pies</td>
-            <td>Mesa de billar</td>
-            <td>Nuevo</td>
-            <td>2</td>
-            <td>$ 60.000</td>
-          </tr>
+          <tr><th scope="row">TAC-001</th><td data-label="Producto">Taco de pool 1,45 m</td><td data-label="Categoría">Implemento de juego</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">8</td><td data-label="Valor de alquiler">$ 12.000</td></tr>
+          <tr><th scope="row">BOL-004</th><td data-label="Producto">Juego de bolas de billar</td><td data-label="Categoría">Implemento de juego</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">3</td><td data-label="Valor de alquiler">$ 45.000</td></tr>
+          <tr><th scope="row">TRI-002</th><td data-label="Producto">Triángulo para bolas</td><td data-label="Categoría">Implemento de juego</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">5</td><td data-label="Valor de alquiler">$ 8.000</td></tr>
+          <tr><th scope="row">TIZ-010</th><td data-label="Producto">Tiza de billar</td><td data-label="Categoría">Consumible</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">24</td><td data-label="Valor de alquiler">$ 2.000</td></tr>
+          <tr><th scope="row">GUA-003</th><td data-label="Producto">Guantes de fibra</td><td data-label="Categoría">Consumible</td><td data-label="Condición">Semi-nuevo</td><td data-label="Existencias">6</td><td data-label="Valor de alquiler">$ 15.000</td></tr>
+          <tr><th scope="row">EXT-005</th><td data-label="Producto">Extensión de taco</td><td data-label="Categoría">Implemento de juego</td><td data-label="Condición">En reparación</td><td data-label="Existencias">1</td><td data-label="Valor de alquiler">$ 10.000</td></tr>
+          <tr><th scope="row">MES-008</th><td data-label="Producto">Mesa de billar 8 pies</td><td data-label="Categoría">Mesa de billar</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">2</td><td data-label="Valor de alquiler">$ 60.000</td></tr>
         </tbody>
       </table>
+      </div>
     </section>
 
     <section>
@@ -157,10 +122,12 @@
         <button type="submit" class="boton">Registrar producto</button>
       </form>
     </section>
-  </main>
+    </main>
 
-  <footer>
-    <p>La Carambola Dorada — Sistema de gestión de salones de billar</p>
-  </footer>
+    <footer class="panel__pie">
+      <p>La Carambola Dorada — Sistema de gestión de salones de billar</p>
+    </footer>
+
+  </div>
 </body>
 </html>

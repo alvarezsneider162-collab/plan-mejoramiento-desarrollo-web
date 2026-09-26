@@ -3,20 +3,38 @@
 /* ==========================================================================
    LA CARAMBOLA DORADA — Hoja de estilos de la aplicacion
    Archivo: css/estilos.css
-   Actividad: recuperacion, dia 4
+   Actividad: recuperacion, dia 6
+
+   MOBILE FIRST. Esta hoja esta escrita de abajo hacia arriba: lo que esta
+   fuera de cualquier @media es el TELEFONO, y cada @media (min-width: ...)
+   va ENCENDIENDO cosas segun la pantalla se hace mas grande. No hay ni un
+   solo @media (max-width: ...) en todo el archivo, y esa es justamente la
+   diferencia entre mobile first y "disenar para escritorio y despues
+   arreglarlo": aqui no hay nada que arreglar porque nunca se escribio
+   la pagina pensando en el escritorio primero.
+
+   PUNTOS DE QUIEBRE (todos en rem, para que escalen con el tamano de letra
+   que elija la persona; 1rem = 16px por defecto):
+
+     base   sin media query   0 - 639 px   telefono en vertical
+     sm     min-width: 40rem  640 px       dos tarjetas, cabecera en fila
+     md     min-width: 48rem  768 px       la tabla vuelve a ser tabla
+     lg     min-width: 64rem  1024 px      el menu pasa a columna fija
+     xl     min-width: 90rem  1440 px      ancho maximo de contenido
 
    Reglas que cumple este archivo (criterios de evaluacion):
      1. Todo color sale de una variable. Ni un hexadecimal suelto, ni un rgb().
      2. Ningun font-size directo: los cinco tamanos salen de --tipo-*.
      3. No se usa !important en ninguna regla.
      4. El estado de foco es visible y en ningun sitio se anula con outline: none.
+     5. Cero desplazamiento horizontal en 360, 768 ni 1440 px.
    ========================================================================== */
 
 
 /* --------------------------------------------------------------------------
    1. Escala tipografica — cinco tamanos en rem
-   Base 1rem = 16px. Progresion de razon corta (en torno a 1,2) para que cada
-   salto se perciba sin romper la lectura del cuerpo de texto.
+   Progresion de razon corta (en torno a 1,2) para que cada salto se perciba
+   sin romper la lectura del cuerpo de texto.
    -------------------------------------------------------------------------- */
 :root {
   --tipo-xs:  0.875rem;   /* 14px — encabezados de tabla, pie, texto auxiliar */
@@ -25,16 +43,19 @@
   --tipo-lg:  1.5rem;     /* 24px — titulos de seccion                        */
   --tipo-xl:  1.875rem;   /* 30px — titulo principal                           */
 
-  --interlineado:    1.6;      /* interlineado general, segun la guia */
-  --medida:          70ch;     /* ancho maximo de linea comodo de leer  */
-  --ancho-ingreso:   26rem;    /* ancho de la tarjeta de ingreso       */
-  --ancho-maximo:    72rem;    /* ancho maximo del contenido            */
+  --interlineado:    1.6;      /* interlineado general                         */
+  --medida:          70ch;     /* ancho maximo de linea comodo de leer         */
+  --ancho-ingreso:   26rem;    /* ancho de la tarjeta de ingreso               */
+  --ancho-maximo:    72rem;    /* ancho maximo del contenido                   */
+  --ancho-menu:      240px;    /* ancho fijo del menu lateral, el del enunciado */
 }
 
 /* --------------------------------------------------------------------------
    2. Base
    -------------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
@@ -72,6 +93,14 @@ h3 {
 }
 small, .pie { font-size: var(--tipo-xs); }
 
+/* Lo que nunca debe pasar: que el contenido sea mas ancho que la pantalla.
+   min-width: 0 en los contenedores flex y grid permite que el contenido se
+   encoga por debajo de su tamano natural en vez de empujar la pagina. */
+body > main,
+body > header,
+body > footer,
+.panel__contenido { min-width: 0; }
+
 /* --------------------------------------------------------------------------
    3. Foco visible — lo que permite usar el sistema con el teclado.
    El anillo se dibuja FUERA del control (outline-offset), de modo que cae
@@ -82,61 +111,35 @@ a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+[tabindex]:focus-visible {
   outline: 3px solid var(--color-oro);
   outline-offset: 2px;
 }
 
 /* --------------------------------------------------------------------------
-   4. Encabezado, navegacion y pie
+   4. Encabezado, navegacion y pie — base: TELÉFONO (una sola columna)
    -------------------------------------------------------------------------- */
 body > header {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.25rem 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1rem;
   border-bottom: 3px solid var(--color-marca);
 }
-body > header img { width: 15rem; }
-
-body > nav ul,
-header nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-header nav a {
-  font-size: var(--tipo-sm);
-  font-weight: 600;
-  color: var(--color-marca);
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  padding-bottom: 2px;
-}
-header nav a:hover {
-  color: var(--color-marca-hover);
-  border-bottom-color: var(--color-oro);
-}
-header nav a[aria-current="page"] {
-  color: var(--color-marca-hover);
-  border-bottom-color: var(--color-marca);
-}
+body > header img { width: 11rem; }
 
 body > main {
   max-width: var(--ancho-maximo);
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 1.5rem 1rem;
 }
 body > main section { margin-bottom: 2.5rem; }
 
 body > footer {
   margin-top: 2rem;
-  padding: 1.25rem 0;
+  padding: 1.25rem 1rem;
   border-top: 1px solid var(--border-color);
   font-size: var(--tipo-xs);
   color: var(--color-text-muted);
@@ -148,7 +151,7 @@ body > footer {
 .pantalla-ingreso {
   max-width: var(--ancho-ingreso);
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 1.5rem 1rem;
 }
 .pantalla-ingreso h1 { margin-bottom: 0.25rem; }
 .pantalla-ingreso .lema {
@@ -158,8 +161,8 @@ body > footer {
 }
 
 fieldset {
-  margin: 0 0 1.5rem;
-  padding: 1.25rem 1.4rem 1.5rem;
+  margin: 0 0 1.25rem;
+  padding: 1rem 1rem 1.25rem;
   background: var(--color-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -179,19 +182,30 @@ label {
   font-weight: 600;
 }
 
+form { max-width: 34rem; }
+
+/* --------------------------------------------------------------------------
+   6. Controles de formulario — los CINCO estados
+   reposo (esta regla) · :hover · :focus-visible (seccion 3) ·
+   :active · :disabled · y ademas el estado de error con [aria-invalid].
+
+   Ninguno de estos estados existia en la hoja del dia 5: .campo no tenia
+   ni un solo estado y no habia un solo :disabled en todo el proyecto.
+   -------------------------------------------------------------------------- */
 .campo,
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"],
 input[type="date"],
+input[type="search"],
 select,
 textarea {
   width: 100%;
   margin-top: 0.3rem;
-  padding: 0.6rem 0.7rem;
+  padding: 0.7rem 0.8rem;
   font-family: inherit;
-  font-size: var(--tipo-sm);
+  font-size: var(--tipo-sm);       /* 16px: por debajo de eso Safari hace zoom al enfocar */
   color: var(--color-text-main);
   background: var(--color-surface);
   border: 1px solid var(--border-control);
@@ -200,17 +214,77 @@ textarea {
 textarea { resize: vertical; }
 .campo::placeholder { color: var(--color-text-muted); }
 
-input[type="radio"] {
+/* Estado 2 — hover */
+.campo:hover:not(:disabled),
+input[type="text"]:hover:not(:disabled),
+input[type="email"]:hover:not(:disabled),
+input[type="password"]:hover:not(:disabled),
+input[type="number"]:hover:not(:disabled),
+input[type="date"]:hover:not(:disabled),
+select:hover:not(:disabled),
+textarea:hover:not(:disabled) {
+  border-color: var(--color-marca);
+}
+
+/* Estado 3 — foco: lo dibuja la seccion 3 con el anillo oro. Aqui solo se
+   refuerza el borde para que el control ademas se note por su color. */
+.campo:focus,
+input:focus,
+select:focus,
+textarea:focus { border-color: var(--color-marca); }
+
+/* Estado 5 — deshabilitado */
+.campo:disabled,
+.campo[disabled],
+input:disabled,
+input[disabled],
+select:disabled,
+select[disabled],
+textarea:disabled,
+textarea[disabled] {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  border-color: var(--border-color);
+  cursor: not-allowed;
+}
+
+/* Estado de error — se marca con aria-invalid, no con una clase, para que el
+   estado de error este en el HTML y no solo en la hoja de estilos. */
+.campo[aria-invalid="true"],
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--color-error);
+  border-width: 2px;
+}
+.campo[aria-invalid="true"]:focus-visible,
+input[aria-invalid="true"]:focus-visible,
+select[aria-invalid="true"]:focus-visible,
+textarea[aria-invalid="true"]:focus-visible {
+  outline-color: var(--color-error);
+}
+
+input[type="radio"],
+input[type="checkbox"] {
   width: auto;
   margin: 0 0.4rem 0 0;
+  accent-color: var(--color-marca);
 }
-input[type="radio"] + label {
+input[type="radio"] + label,
+input[type="checkbox"] + label {
   display: inline-block;
   margin: 0 1.25rem 0 0;
   font-weight: 400;
 }
 
+/* --------------------------------------------------------------------------
+   7. Botones — los CINCO estados
+   -------------------------------------------------------------------------- */
 .boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;             /* 44px: objetivo tactil minimo recomendado */
   padding: 0.7rem 1.4rem;
   font-family: inherit;
   font-size: var(--tipo-sm);
@@ -220,133 +294,127 @@ input[type="radio"] + label {
   border: 2px solid var(--color-marca);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background 0.18s ease, border-color 0.18s ease;
 }
-.boton:hover {
-  background: var(--color-marca-hover);
-  border-color: var(--color-marca-hover);
+
+/* Estado 2 — hover */
+.boton:hover:not(:disabled) { background: var(--color-marca-hover); border-color: var(--color-marca-hover); }
+
+/* Estado 4 — activo (pulsado) */
+.boton:active:not(:disabled) { box-shadow: var(--shadow-sm); transform: translateY(1px); }
+
+/* Estado 5 — deshabilitado */
+.boton:disabled,
+.boton[disabled] {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  border-color: var(--border-color);
+  box-shadow: none;
+  cursor: not-allowed;
 }
-.boton:active { box-shadow: var(--shadow-sm); }
+
+/* Variante secundaria: mismo componente, otro peso visual */
+.boton--secundario {
+  color: var(--color-marca);
+  background: var(--color-surface);
+  border-color: var(--color-marca);
+}
+.boton--secundario:hover:not(:disabled) { color: var(--color-text-inverse); }
+.boton--secundario:disabled { color: var(--color-text-muted); border-color: var(--border-color); }
 
 /* --------------------------------------------------------------------------
-   6. Tabla de productos
-   Encabezado con el color de marca, filas alternas y estado de :hover.
+   8. Botón del menú colapsable
+   Solo existe en la base móvil; en lg se oculta, porque en escritorio el
+   menu ya esta siempre visible y el boton sobra.
+   El icono de tres rayas se dibuja con box-shadow en vez de con
+   position: absolute, para no depender de posicionamiento ninguno.
    -------------------------------------------------------------------------- */
-.tabla-productos {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--color-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-}
-.tabla-productos caption {
-  caption-side: top;
-  padding: 0 0 0.6rem;
-  font-size: var(--tipo-xs);
-  color: var(--color-text-muted);
-  text-align: left;
-}
-.tabla-productos thead th {
-  padding: 0.75rem 0.9rem;
+.boton-menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.65rem;
+  font-family: inherit;
   font-size: var(--tipo-xs);
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  text-align: left;
   color: var(--color-text-inverse);
-  background: var(--color-marca);
-  border-bottom: 2px solid var(--color-oro);
+  background: transparent;
+  border: 1px solid var(--color-oro-tenue);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
 }
-.tabla-productos tbody th,
-.tabla-productos tbody td {
-  padding: 0.7rem 0.9rem;
-  font-size: var(--tipo-sm);
-  text-align: left;
-  border-bottom: 1px solid var(--border-color);
+.boton-menu:hover { background: var(--color-marca); }
+.boton-menu:active { background: var(--color-marca-hover); }
+.boton-menu[aria-expanded="true"] { background: var(--color-marca-hover); }
+.boton-menu__icono {
+  display: block;
+  width: 1.1rem;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 -5px 0 currentColor, 0 5px 0 currentColor;
 }
-.tabla-productos tbody th {
-  font-family: Consolas, 'Courier New', monospace;
-  font-weight: 600;
-  color: var(--color-oro);
-}
-.tabla-productos tbody tr:last-child th,
-.tabla-productos tbody tr:last-child td { border-bottom: none; }
-
-/* Filas alternas */
-.tabla-productos tbody tr:nth-child(even) {
-  background: var(--color-surface-alt);
-}
-
-/* Estado de hover */
-.tabla-productos tbody tr:hover {
-  background: var(--color-marca-light);
-}
-.tabla-productos tbody tr:hover th { color: var(--color-marca-hover); }
-
-form { max-width: 34rem; }
 
 /* --------------------------------------------------------------------------
-   7. Maquetacion del tablero con Grid
-   --------------------------------------------------------------------------
-   Aqui se reparten las dos tecnicas de la actividad, cada una donde toca:
-
-   - GRID para la estructura de la pagina. Se usa grid-template-areas para
-     nombrar cada zona (barra, menu, contenido, pie) en vez de colocar cada
-     bloque con posiciones. Grid es lo adecuado porque las zonas tienen que
-     ocupar filas y columnas a la vez, y ademas permite declarar el ancho
-     fijo del menu y que el contenido ocupe el resto.
-   - FLEXBOX para el interior de la barra, que solo necesita repartir dos
-     elementos en una misma fila. Flexbox es mas simple y sobra para eso.
-
-   En la columna del contenido se usa minmax(0, 1fr) y no 1fr a secas: un
-   1fr tiene minimo automatico igual a min-content, asi que una tabla ancha
-   ensancharia la columna y el menu se saldria de la pantalla. Con
-   minmax(0, 1fr) la columna si puede encogerse por debajo del contenido.
+   9. Maquetación del tablero con Grid — base: TELÉFONO (una columna)
+   - GRID para la estructura de la pagina, con grid-template-areas para nombrar
+     cada zona. Grid porque las zonas ocupan filas y columnas a la vez, y
+     porque permite declarar el ancho fijo del menu y que el contenido
+     ocupe el resto.
+   - FLEXBOX dentro de la barra y del menu, que solo reparten elementos en
+     una sola linea o en una sola columna.
    -------------------------------------------------------------------------- */
 .panel {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
   grid-template-areas:
-    "barra  barra"
-    "menu   contenido"
-    "pie    pie";
+    "barra"
+    "contenido"
+    "pie";
+  grid-template-rows: auto 1fr auto;
   min-height: 100vh;
 }
 
-/* --- Barra superior: FLEXBOX, porque solo reparte dos elementos en fila --- */
+/* Barra superior: FLEXBOX, porque solo reparte tres elementos en fila */
 .panel__barra {
   grid-area: barra;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.6rem 1.2rem;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   background: var(--color-marca);
   color: var(--color-text-inverse);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 30;
 }
-
-.panel__barra img { width: 11rem; }
-
+.panel__barra img { width: 8rem; }
 .panel__sesion {
+  flex: 1 1 100%;            /* base movil: la sesion baja a su propia linea */
   margin: 0;
   max-width: none;
   font-size: var(--tipo-xs);
   color: var(--color-oro-tenue);
 }
 
-/* --- Menu lateral: GRID para fijarlo a 240 px --- */
+/* Menu lateral: en movil esta FUERA de pantalla, pegado a la izquierda.
+   transform no ocupa sitio en el flujo, asi que el menu escondido no genera
+   barra de desplazamiento horizontal. */
 .panel__menu {
-  grid-area: menu;
-  background: var(--color-marca-hover);
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--ancho-menu);
+  z-index: 20;
   padding: 1.2rem 1rem;
+  overflow-y: auto;
+  background: var(--color-marca-hover);
   color: var(--color-text-inverse);
+  transform: translateX(-100%);
+  visibility: hidden;        /* cerrado = no se puede enfocar con el teclado */
 }
+.panel__menu.abierto { transform: translateX(0); visibility: visible; }
 
 .panel__menu h2 {
   margin: 0 0 0.75rem;
@@ -357,7 +425,6 @@ form { max-width: 34rem; }
   color: var(--color-oro-tenue);
   border-bottom: 1px solid var(--color-oro);
 }
-
 .panel__menu ul {
   display: flex;
   flex-direction: column;
@@ -366,69 +433,57 @@ form { max-width: 34rem; }
   padding: 0;
   list-style: none;
 }
-
 .panel__menu a {
   display: block;
-  padding: 0.5rem 0.6rem;
+  padding: 0.6rem 0.6rem;
   border-radius: var(--radius-sm);
   color: var(--color-text-inverse);
   text-decoration: none;
 }
-
 .panel__menu a:hover { background: var(--color-marca); }
-
 .panel__menu a[aria-current="page"] {
   font-weight: 700;
   background: var(--color-marca);
   box-shadow: inset 3px 0 0 var(--color-oro);
 }
 
-/* --- Contenido: GRID, y la columna ya se acota con minmax(0, 1fr) --- */
+/* Contenido */
 .panel__contenido {
   grid-area: contenido;
-  padding: 1.6rem;
+  padding: 1rem 0.75rem;
   min-width: 0;
 }
-
 .panel__contenido section,
 .panel__contenido aside { margin-bottom: 2.2rem; }
 
-/* La tabla es ancha y no cabe entera en ventanas angostas. En vez de dejar
-   que desborde la pagina, este contenedor le da su propio desplazamiento
-   horizontal: la tabla se mueve, pero la maquetacion de Grid no se rompe. */
-.tabla-scroll {
-  min-width: 0;
-  overflow-x: auto;
-}
-
-/* --- Pie --- */
+/* Pie */
 .panel__pie {
   grid-area: pie;
-  padding: 0.8rem 1.2rem;
+  padding: 0.8rem 0.75rem;
   background: var(--color-surface);
   border-top: 1px solid var(--border-color);
   font-size: var(--tipo-xs);
   color: var(--color-text-muted);
 }
-
 .panel__pie p { margin: 0; }
 
-/* --- Fila de indicadores: GRID con auto-fit, que se reacomoda solo --- */
+/* Fila de indicadores: GRID.
+   En el telefono va UNA tarjeta a lo ancho, sin depender de cuentas: es lo que
+   espera quien lee un tablero en 360 px. A partir de sm el minimo baja a 220px
+   y auto-fit reparte solo, medido: 2 columnas a 640, 3 a 768, 4 a 1440. */
 .indicadores {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
 }
-
 .tarjeta {
-  padding: 1rem 1.25rem;
+  padding: 0.9rem 1rem;
   background: var(--color-surface);
   border: 1px solid var(--border-color);
   border-left: 4px solid var(--color-marca);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
 }
-
 .tarjeta h3 {
   margin: 0 0 0.35rem;
   font-size: var(--tipo-xs);
@@ -436,7 +491,6 @@ form { max-width: 34rem; }
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
-
 .tarjeta p {
   margin: 0;
   max-width: none;
@@ -444,32 +498,359 @@ form { max-width: 34rem; }
   font-weight: 700;
   color: var(--color-marca);
 }
+.tarjeta:hover { box-shadow: var(--shadow-md); }
 
 /* --------------------------------------------------------------------------
-   8. Pantallas angostas
-   --------------------------------------------------------------------------
-   El menu lateral NO se apila ni se oculta: el criterio de la actividad pide
-   que conserve su ancho de 240 px. Lo que se reduce es el relleno del
-   contenido y el padding de las tarjetas, para que el area de trabajo se
-   siga viendo comoda en ventanas angostas.
+   10. Tablas — base: TELÉFONO. Cada fila es una tarjeta.
+   Con seis columnas una tabla de verdad no cabe en 360 px. En vez de dejar
+   que se desborde, o de esconder columnas sin avisar, la base movil
+   convierte cada <tr> en una tarjeta: el <th scope="row"> es el titulo y
+   cada <td> se muestra como "etiqueta: valor" con content: attr(data-label).
+   A partir de md (768 px) vuelve a ser una tabla de verdad.
    -------------------------------------------------------------------------- */
-@media (max-width: 40rem) {
-  body > header { flex-direction: column; align-items: flex-start; }
-  .tabla-productos thead th,
+.tabla-scroll { min-width: 0; }
+
+.tabla-productos {
+  display: block;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+.tabla-productos caption {
+  display: block;
+  caption-side: top;
+  padding: 0 0 0.6rem;
+  font-size: var(--tipo-xs);
+  color: var(--color-text-muted);
+  text-align: left;
+}
+
+/* El thead se oculta solo de la vista, pero sigue en el HTML: un lector de
+   pantalla sigue leyendo los encabezados de columna. */
+.tabla-productos thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.tabla-productos tbody tr {
+  display: block;
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.tabla-productos tbody tr:hover { border-color: var(--color-marca); }
+.tabla-productos tbody tr:last-child { margin-bottom: 0; }
+
+.tabla-productos tbody th,
+.tabla-productos tbody td {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 42%) 1fr;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border: none;
+  text-align: left;
+  font-size: var(--tipo-sm);
+}
+.tabla-productos tbody th {
+  grid-column: 1 / -1;              /* el codigo o la mesa titula la tarjeta */
+  display: block;
+  margin-bottom: 0.2rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--border-color);
+  font-family: var(--font-display);
+  font-size: var(--tipo-md);
+  color: var(--color-marca);
+}
+.tabla-productos tbody td::before {
+  content: attr(data-label);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+.tabla-productos tbody tr:nth-child(even) { background: var(--color-surface); }
+
+/* --------------------------------------------------------------------------
+   11. Alertas y etiquetas de estado
+   Nunca se comunica un estado solo por color: cada alerta lleva texto.
+   -------------------------------------------------------------------------- */
+.lista-alertas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.alerta {
+  padding: 0.7rem 0.85rem;
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--color-info);
+  border-radius: var(--radius-sm);
+  font-size: var(--tipo-sm);
+}
+.alerta--exito     { border-left-color: var(--color-success); }
+.alerta--advertencia{ border-left-color: var(--color-warning); }
+.alerta--error     { border-left-color: var(--color-error); }
+.alerta--info      { border-left-color: var(--color-info); }
+.alerta--neutro    { border-left-color: var(--border-control); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: var(--tipo-xs);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge--exito     { color: var(--color-success);  border-color: var(--color-success);  background: var(--color-surface); }
+.badge--advertencia{ color: var(--color-warning);  border-color: var(--color-warning);  background: var(--color-surface); }
+.badge--error     { color: var(--color-error);    border-color: var(--color-error);    background: var(--color-surface); }
+.badge--info      { color: var(--color-info);     border-color: var(--color-info);     background: var(--color-surface); }
+.badge--neutro    { color: var(--color-text-muted); border-color: var(--border-control); background: var(--color-surface); }
+
+/* --------------------------------------------------------------------------
+   12. PUNTOS DE QUIEBRE
+   Aqui es donde se enciende lo grande. Cada bloque solo enciende cosas:
+   nunca apaga nada que ya funcionaba en el telefono.
+
+   La guia de la actividad propone un ejemplo con
+   @media (prefers-reduced-motion: reduce){ *{ transition-duration:.01ms !important } }
+   pero ese !important viola la regla 3 de este mismo proyecto. Por eso la
+   transicion se declara DENTRO de prefers-reduced-motion: no-preference:
+   si la persona pidio menos movimiento, directamente no hay transicion.
+   -------------------------------------------------------------------------- */
+
+/* --- sm · 640 px: dos tarjetas por fila y la cabecera pasa a ser una fila --- */
+@media (min-width: 40rem) {
+  body > header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.25rem 1.25rem;
+  }
+  body > header img { width: 15rem; }
+  body > main { padding: 2rem 1.5rem; }
+  body > footer { padding: 1.25rem 1.5rem; }
+  .pantalla-ingreso { padding: 2rem 1.5rem; }
+  fieldset { padding: 1.25rem 1.4rem 1.5rem; }
+
+  .panel__barra { padding: 0.6rem 1.2rem; gap: 1rem; }
+  .panel__barra img { width: 11rem; }
+  .panel__sesion { flex: 0 1 auto; }
+  .panel__contenido { padding: 1.5rem 1.25rem; }
+  .panel__pie { padding: 0.8rem 1.2rem; }
+
+  .indicadores { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+}
+
+/* --- md · 768 px: la tabla vuelve a ser una tabla de verdad --- */
+@media (min-width: 48rem) {
+  .tabla-productos {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .tabla-productos thead {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    white-space: normal;
+    clip-path: none;
+  }
+  .tabla-productos tbody tr {
+    display: table-row;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .tabla-productos tbody tr:hover { background: var(--color-marca-light); }
+  .tabla-productos tbody tr:nth-child(even) { background: var(--color-surface-alt); }
+  .tabla-productos tbody tr:nth-child(even):hover { background: var(--color-marca-light); }
   .tabla-productos tbody th,
-  .tabla-productos tbody td { padding: 0.55rem 0.5rem; }
-  .panel__barra { padding: 0.5rem 0.75rem; }
-  .panel__barra img { width: 8rem; }
-  .panel__contenido { padding: 1rem 0.75rem; }
-  .panel__menu { padding: 1rem 0.6rem; }
-  .indicadores { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .tabla-productos tbody td {
+    display: table-cell;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .tabla-productos tbody th {
+    grid-column: auto;
+    display: table-cell;
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--border-color);
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: var(--tipo-sm);
+    color: var(--color-oro);
+  }
+  .tabla-productos tbody td::before { content: none; }
+  .tabla-productos tbody tr:hover th { color: var(--color-marca-hover); }
+  .tabla-productos tbody tr:last-child th,
+  .tabla-productos tbody tr:last-child td { border-bottom: none; }
+
+  .tabla-productos thead th {
+    padding: 0.75rem 0.9rem;
+    font-size: var(--tipo-xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--color-text-inverse);
+    background: var(--color-marca);
+    border-bottom: 2px solid var(--color-oro);
+  }
+}
+
+/* --- lg · 1024 px: el menu deja de estar fuera de pantalla y pasa a columna --- */
+@media (min-width: 64rem) {
+  .panel {
+    grid-template-columns: var(--ancho-menu) minmax(0, 1fr);
+    grid-template-areas:
+      "barra  barra"
+      "menu   contenido"
+      "pie    pie";
+  }
+  .panel__menu {
+    position: static;         /* deja de ser fixed: ahora es una zona de la rejilla */
+    grid-area: menu;
+    inset: auto;
+    width: auto;
+    overflow-y: visible;
+    transform: none;
+    visibility: visible;
+  }
+  .boton-menu { display: none; }   /* en escritorio el menu ya esta a la vista */
+
+  .panel__contenido { padding: 1.6rem; }
+  body > main { padding: 2rem 2rem; }
+}
+
+/* --- xl · 1440 px: el contenido se detiene en su ancho maximo --- */
+@media (min-width: 90rem) {
+  .panel__contenido { padding: 2rem 2.5rem; }
 }
 
 /* --------------------------------------------------------------------------
-   9. Impresion
+   13. Movimiento — solo si la persona lo permite
+   En vez de neutralizar la transicion con !important, la transicion se
+   declara solo cuando prefers-reduced-motion dice no-preference.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .panel__menu {
+    transition: transform 0.25s ease, visibility 0s linear 0.25s;
+  }
+  .panel__menu.abierto {
+    transition: transform 0.25s ease, visibility 0s;
+  }
+  .boton, .boton-menu, .tarjeta, .campo, .panel__menu a, .alerta, .badge, header nav a {
+    transition: background-color 0.18s ease, color 0.18s ease,
+                border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .tabla-productos tbody tr { transition: border-color 0.18s ease; }
+}
+
+/* --------------------------------------------------------------------------
+   14. Clases de demostracion para componentes.html
+   Una captura estatica no puede mostrar :hover ni :active: el navegador
+   solo los aplica cuando hay puntero o pulsacion de verdad. Estas clases
+   repintan a mano esos mismos estados para que los cinco queden
+   documentados y se puedan fotografiar.
+   -------------------------------------------------------------------------- */
+.es-hover.boton,
+.boton.es-hover { background: var(--color-marca-hover); border-color: var(--color-marca-hover); }
+.boton.es-active { box-shadow: var(--shadow-sm); transform: translateY(1px); }
+.es-focus { outline: 3px solid var(--color-oro); outline-offset: 2px; }
+.es-disabled.boton,
+.boton.es-disabled {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  border-color: var(--border-color);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.es-hover.campo,
+.campo.es-hover { border-color: var(--color-marca); }
+.campo.es-active { border-color: var(--color-marca); box-shadow: inset 0 0 0 1px var(--color-marca); }
+.es-invalid.campo,
+.campo.es-invalid { border-color: var(--color-error); border-width: 2px; }
+.es-disabled.campo,
+.campo.es-disabled {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  border-color: var(--border-color);
+  cursor: not-allowed;
+}
+.tarjeta.es-hover { box-shadow: var(--shadow-md); }
+.enlace.es-hover { color: var(--color-marca-hover); border-bottom-color: var(--color-oro); }
+.enlace.es-visited { color: var(--color-marca-hover); }
+.enlace.es-active { color: var(--color-oro); border-bottom-color: var(--color-marca); }
+.boton-menu.es-hover { background: var(--color-marca); }
+.tabla-fila.es-hover { background: var(--color-marca-light); }
+.tabla-fila.es-hover th { color: var(--color-marca-hover); }
+
+/* Clases de apoyo que usa la propia guia de estilo */
+code {
+  font-family: Consolas, 'Courier New', monospace;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  padding: 0 3px;
+}
+.rotulo-demo {
+  display: block;
+  margin: 0 0 0.2rem;
+  font-size: var(--tipo-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+.lista-enlaces {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.enlace {
+  color: var(--color-marca);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   15. Impresion
    -------------------------------------------------------------------------- */
 @media print {
   body { background: var(--color-surface); }
-  .boton { display: none; }
+  .boton, .boton-menu { display: none; }
+  .panel__menu { position: static; transform: none; visibility: visible; width: auto; }
+  .tabla-productos tbody tr { display: table-row; }
+  .tabla-productos tbody th, .tabla-productos tbody td { display: table-cell; }
+  .tabla-productos tbody td::before { content: none; }
   .tabla-productos tbody tr:nth-child(even) { background: var(--color-surface); }
 }
