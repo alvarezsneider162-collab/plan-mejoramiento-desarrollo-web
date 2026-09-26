@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ingreso — La Carambola Dorada</title>
+</head>
+<body>
+  <header>
+    <img src="assets/img/logo.svg" alt="Logo de La Carambola Dorada" width="120">
+  </header>
+
+  <main>
+    <h1>Ingreso al panel de gestión</h1>
+
+    <form action="login.php" method="post" novalidate>
+      <fieldset>
+        <legend>Credenciales</legend>
+
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" name="correo" required autocomplete="username">
+
+        <label for="clave">Contraseña</label>
+        <input type="password" id="clave" name="clave" required
+               autocomplete="current-password" minlength="8">
+      </fieldset>
+
+      <button type="submit">Iniciar sesión</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>La Carambola Dorada — Sistema de gestión de salones de billar</p>
+  </footer>
+</body>
+</html>

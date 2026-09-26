@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Productos — La Carambola Dorada</title>
+</head>
+<body>
+  <header>
+    <img src="assets/img/logo.svg" alt="Logo de La Carambola Dorada" width="160">
+
+    <nav>
+      <h2 id="menu-titulo">Menú principal</h2>
+      <ul aria-labelledby="menu-titulo">
+        <li><a href="dashboard.html">Tablero</a></li>
+        <li><a href="productos.html" aria-current="page">Productos</a></li>
+        <li><a href="login.html">Cerrar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Productos</h1>
+
+    <section>
+      <h2>Inventario del salón</h2>
+
+      <table>
+        <caption>Implementos y consumibles disponibles para alquiler</caption>
+        <thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Producto</th>
+            <th scope="col">Categoría</th>
+            <th scope="col">Condición</th>
+            <th scope="col">Existencias</th>
+            <th scope="col">Valor de alquiler</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">TAC-001</th>
+            <td>Taco de pool 1,45 m</td>
+            <td>Implemento de juego</td>
+            <td>Nuevo</td>
+            <td>8</td>
+            <td>$ 12.000</td>
+          </tr>
+          <tr>
+            <th scope="row">BOL-004</th>
+            <td>Juego de bolas de billar</td>
+            <td>Implemento de juego</td>
+            <td>Nuevo</td>
+            <td>3</td>
+            <td>$ 45.000</td>
+          </tr>
+          <tr>
+            <th scope="row">TRI-002</th>
+            <td>Triángulo para bolas</td>
+            <td>Implemento de juego</td>
+            <td>Nuevo</td>
+            <td>5</td>
+            <td>$ 8.000</td>
+          </tr>
+          <tr>
+            <th scope="row">TIZ-010</th>
+            <td>Tiza de billar</td>
+            <td>Consumible</td>
+            <td>Nuevo</td>
+            <td>24</td>
+            <td>$ 2.000</td>
+          </tr>
+          <tr>
+            <th scope="row">GUA-003</th>
+            <td>Guantes de fibra</td>
+            <td>Consumible</td>
+            <td>Semi-nuevo</td>
+            <td>6</td>
+            <td>$ 15.000</td>
+          </tr>
+          <tr>
+            <th scope="row">EXT-005</th>
+            <td>Extensión de taco</td>
+            <td>Implemento de juego</td>
+            <td>En reparación</td>
+            <td>1</td>
+            <td>$ 10.000</td>
+          </tr>
+          <tr>
+            <th scope="row">MES-008</th>
+            <td>Mesa de billar 8 pies</td>
+            <td>Mesa de billar</td>
+            <td>Nuevo</td>
+            <td>2</td>
+            <td>$ 60.000</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Registro de producto</h2>
+
+      <form action="productos.php" method="post" novalidate>
+        <fieldset>
+          <legend>Datos del producto</legend>
+
+          <label for="codigo">Código del producto</label>
+          <input type="text" id="codigo" name="codigo" required
+                 pattern="[A-Z]{3}-[0-9]{3}"
+                 title="Tres letras en mayúscula, guion y tres dígitos. Ejemplo: TAC-001"
+                 maxlength="7">
+
+          <label for="nombre">Nombre del producto</label>
+          <input type="text" id="nombre" name="nombre" required maxlength="60">
+
+          <label for="categoria">Categoría</label>
+          <select id="categoria" name="categoria" required>
+            <option value="">Seleccione una categoría</option>
+            <option value="implemento">Implemento de juego</option>
+            <option value="consumible">Consumible</option>
+            <option value="repuesto">Repuesto</option>
+            <option value="mesa">Mesa de billar</option>
+          </select>
+
+          <label for="cantidad">Existencias</label>
+          <input type="number" id="cantidad" name="cantidad" required min="1" step="1">
+
+          <label for="valor_alquiler">Valor de alquiler en pesos</label>
+          <input type="number" id="valor_alquiler" name="valor_alquiler" required
+                 min="0" step="0.01">
+
+          <label for="fecha_ingreso">Fecha de ingreso al inventario</label>
+          <input type="date" id="fecha_ingreso" name="fecha_ingreso" required>
+
+          <label for="proveedor">Proveedor</label>
+          <input type="text" id="proveedor" name="proveedor" maxlength="80">
+
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" rows="3" maxlength="200"></textarea>
+        </fieldset>
+
+        <fieldset>
+          <legend>Condición del producto</legend>
+
+          <input type="radio" id="nuevo" name="condicion" value="nuevo" checked>
+          <label for="nuevo">Nuevo</label>
+
+          <input type="radio" id="semi_nuevo" name="condicion" value="semi_nuevo">
+          <label for="semi_nuevo">Semi-nuevo</label>
+
+          <input type="radio" id="reparacion" name="condicion" value="reparacion">
+          <label for="reparacion">En reparación</label>
+        </fieldset>
+
+        <button type="submit">Registrar producto</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>La Carambola Dorada — Sistema de gestión de salones de billar</p>
+  </footer>
+</body>
+</html>

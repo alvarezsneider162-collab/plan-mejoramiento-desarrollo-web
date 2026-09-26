@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tablero de control — La Carambola Dorada</title>
+</head>
+<body>
+  <header>
+    <img src="assets/img/logo.svg" alt="Logo de La Carambola Dorada" width="160">
+
+    <nav>
+      <h2 id="menu-titulo">Menú principal</h2>
+      <ul aria-labelledby="menu-titulo">
+        <li><a href="dashboard.html" aria-current="page">Tablero</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="login.html">Cerrar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Tablero de control</h1>
+
+    <section>
+      <h2>Resumen del día</h2>
+      <dl>
+        <dt>Mesas ocupadas</dt>
+        <dd>5 de 8</dd>
+        <dt>Mesas libres</dt>
+        <dd>3</dd>
+        <dt>Cobro acumulado del día</dt>
+        <dd>$ 84.000</dd>
+        <dt>Implementos por devolver</dt>
+        <dd>4</dd>
+        <dt>Tiempo promedio por mesa</dt>
+        <dd>52 minutos</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Estado de las mesas</h2>
+      <table>
+        <caption>Ocupación de las mesas a las 6:40 p.&nbsp;m.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Mesa</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Jugador actual</th>
+            <th scope="col">Hora de inicio</th>
+            <th scope="col">Tiempo jugado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Mesa 1</th>
+            <td>Ocupada</td>
+            <td>Jhon Ballén</td>
+            <td>18:05</td>
+            <td>35 min</td>
+          </tr>
+          <tr>
+            <th scope="row">Mesa 2</th>
+            <td>Ocupada</td>
+            <td>Andrea Ríos</td>
+            <td>17:50</td>
+            <td>50 min</td>
+          </tr>
+          <tr>
+            <th scope="row">Mesa 3</th>
+            <td>Ocupada</td>
+            <td>Derek Céspedes</td>
+            <td>17:20</td>
+            <td>1 h 20 min</td>
+          </tr>
+          <tr>
+            <th scope="row">Mesa 4</th>
+            <td>Libre</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">Mesa 5</th>
+            <td>Ocupada</td>
+            <td>Marcela Ortiz</td>
+            <td>18:30</td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <th scope="row">Mesa 6</th>
+            <td>Libre</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">Mesa 7</th>
+            <td>Reservada</td>
+            <td>Turno de la noche</td>
+            <td>19:00</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">Mesa 8</th>
+            <td>Libre</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <aside>
+      <h2>Alertas</h2>
+      <ul>
+        <li>Mesa 3: faltan 5 minutos para completar la hora pagada.</li>
+        <li>Mesa 1: el jugador solicita 2 horas más de mesa.</li>
+        <li>Faltan 4 bolas de billar por devolver de un alquiler anterior.</li>
+      </ul>
+    </aside>
+  </main>
+
+  <footer>
+    <p>La Carambola Dorada — Sistema de gestión de salones de billar</p>
+  </footer>
+</body>
+</html>
