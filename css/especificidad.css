@@ -1,0 +1,205 @@
+@import url('tokens.css');
+
+/* ==========================================================================
+   EJERCICIO DE ESPECIFICIDAD — paso 4 de la actividad del dia 4
+   Sneider Alvarez Santos · ficha 3428392
+   ----------------------------------------------------------------------------
+   Las TRES reglas de la seccion 1 apuntan al MISMO elemento:
+
+       <p class="aviso" id="aviso-1">Texto de prueba</p>
+
+   En este archivo solo se declara `color`, a proposito: asi lo unico que
+   compite en la cascada es la especificidad, sin ruido de otras propiedades.
+
+   Cero hexadecimales sueltos: todo el color viene de tokens.css.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. EL FRAGMENTO — las tres reglas en conflicto
+   ========================================================================== */
+
+/* Regla 1 — un id.  Especificidad (1,0,0) = 101 puntos.
+   Esta escrita de PRIMERA a proposito, para que la respuesta intuitiva
+   "gana la ultima regla escrita" quede demostrada como incorrecta. */
+#aviso-1 {
+  color: var(--color-error);
+}
+
+/* Regla 2 — un tipo + una clase.  Especificidad (0,1,1) = 11 puntos. */
+p.aviso {
+  color: var(--color-success);
+}
+
+/* Regla 3 — una sola clase.  Especificidad (0,1,0) = 10 puntos. */
+.aviso {
+  color: var(--color-info);
+}
+
+/* ==========================================================================
+   2. SOLO PRESENTACION de la pagina de prueba
+   ----------------------------------------------------------------------------
+   Ninguna regla de esta seccion declara `color` sobre un `p`, para no
+   competir con las tres reglas del ejercicio. Solo la caja y el texto.
+   ========================================================================== */
+
+body.prueba {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg-main);
+  color: var(--color-text-main);
+  font-family: system-ui, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: var(--color-surface);
+  border-bottom: 3px solid var(--color-oro);
+}
+
+.marca img {
+  width: 3rem;
+  height: 3rem;
+}
+
+.lema {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-marca);
+  font-weight: 600;
+}
+
+.contenido {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 1.875rem;
+  margin: 0 0 0.25rem;
+}
+
+.subtitulo {
+  margin: 0 0 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid var(--color-oro-tenue);
+}
+
+.codigo {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  background: var(--color-marca);
+  color: var(--color-oro-tenue);
+  border-left: 5px solid var(--color-oro);
+  border-radius: 0.5rem;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.nota {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-marca-light);
+  border-left: 5px solid var(--color-marca);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+/* Tabla de especificidades */
+.especificidades {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.5rem;
+  font-size: 0.875rem;
+}
+
+.especificidades caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  color: var(--color-marca);
+}
+
+.especificidades th,
+.especificidades td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border: 1px solid var(--color-oro-tenue);
+}
+
+.especificidades thead th {
+  background: var(--color-marca);
+  color: var(--color-text-inverse);
+}
+
+.especificidades tbody tr:nth-child(even) {
+  background: var(--color-surface-alt);
+}
+
+.especificidades td.marca-fila {
+  font-weight: 700;
+  color: var(--color-marca);
+}
+
+.muestra-color {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  vertical-align: -0.1rem;
+  border: 1px solid var(--color-oro-tenue);
+}
+
+.muestra-error   { background: var(--color-error); }
+.muestra-success { background: var(--color-success); }
+.muestra-info    { background: var(--color-info); }
+
+/* Bloque de demostracion: los <p class="aviso"> de prueba.
+   Aqui NO se declara `color`; ese es el objeto del ejercicio. */
+.demostracion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0 0 1rem;
+}
+
+.demostracion > p {
+  flex: 1 1 16rem;
+  margin: 0;
+  padding: 1.25rem;
+  background: var(--color-surface);
+  border: 2px solid var(--color-oro-tenue);
+  border-radius: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.etiqueta-caja {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.aviso:focus-visible {
+  outline: 3px solid var(--color-oro);
+  outline-offset: 2px;
+}

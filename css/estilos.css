@@ -1,0 +1,288 @@
+@import url('tokens.css');
+:root {
+  --tipo-xs:  0.875rem;   /* 14px — encabezados de tabla, pie, texto auxiliar */
+  --tipo-sm:  1rem;       /* 16px — cuerpo, etiquetas, botones, celdas        */
+  --tipo-md:  1.25rem;    /* 20px — legends y subtitulos                      */
+  --tipo-lg:  1.5rem;     /* 24px — titulos de seccion                        */
+  --tipo-xl:  1.875rem;   /* 30px — titulo principal                           */
+
+  --interlineado:    1.6;      /* interlineado general, segun la guia */
+  --medida:          70ch;     /* ancho maximo de linea comodo de leer  */
+  --ancho-ingreso:   26rem;    /* ancho de la tarjeta de ingreso       */
+  --ancho-maximo:    72rem;    /* ancho maximo del contenido            */
+}
+
+/* --------------------------------------------------------------------------
+   2. Base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--tipo-sm);
+  line-height: var(--interlineado);
+  color: var(--color-text-main);
+  background: var(--color-bg-main);
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+p { max-width: var(--medida); }
+
+h1 {
+  font-family: var(--font-display);
+  font-size: var(--tipo-xl);
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+  color: var(--color-marca);
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: var(--tipo-lg);
+  line-height: 1.25;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.35rem;
+  color: var(--color-marca);
+  border-bottom: 2px solid var(--color-oro);
+}
+h3 {
+  font-size: var(--tipo-md);
+  margin: 0 0 0.5rem;
+  color: var(--color-marca-hover);
+}
+small, .pie { font-size: var(--tipo-xs); }
+
+/* --------------------------------------------------------------------------
+   3. Foco visible — lo que permite usar el sistema con el teclado.
+   El anillo se dibuja FUERA del control (outline-offset), de modo que cae
+   sobre el fondo de la pagina y no sobre el propio boton. Oro sobre marfil
+   da 5,27:1, muy por encima del 3:1 que exige el criterio 1.4.11.
+   -------------------------------------------------------------------------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--color-oro);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   4. Encabezado, navegacion y pie
+   -------------------------------------------------------------------------- */
+body > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 3px solid var(--color-marca);
+}
+body > header img { width: 15rem; }
+
+body > nav ul,
+header nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+header nav a {
+  font-size: var(--tipo-sm);
+  font-weight: 600;
+  color: var(--color-marca);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
+}
+header nav a:hover {
+  color: var(--color-marca-hover);
+  border-bottom-color: var(--color-oro);
+}
+header nav a[aria-current="page"] {
+  color: var(--color-marca-hover);
+  border-bottom-color: var(--color-marca);
+}
+
+body > main {
+  max-width: var(--ancho-maximo);
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+body > main section { margin-bottom: 2.5rem; }
+
+body > footer {
+  margin-top: 2rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--border-color);
+  font-size: var(--tipo-xs);
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   5. Pantalla de ingreso
+   -------------------------------------------------------------------------- */
+.pantalla-ingreso {
+  max-width: var(--ancho-ingreso);
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+.pantalla-ingreso h1 { margin-bottom: 0.25rem; }
+.pantalla-ingreso .lema {
+  font-size: var(--tipo-xs);
+  color: var(--color-text-muted);
+  margin: 0 0 1.5rem;
+}
+
+fieldset {
+  margin: 0 0 1.5rem;
+  padding: 1.25rem 1.4rem 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+legend {
+  padding: 0 0.4rem;
+  font-size: var(--tipo-md);
+  font-weight: 600;
+  color: var(--color-marca);
+}
+
+label {
+  display: block;
+  margin-top: 0.9rem;
+  font-size: var(--tipo-sm);
+  font-weight: 600;
+}
+
+.campo,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.6rem 0.7rem;
+  font-family: inherit;
+  font-size: var(--tipo-sm);
+  color: var(--color-text-main);
+  background: var(--color-surface);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-sm);
+}
+textarea { resize: vertical; }
+.campo::placeholder { color: var(--color-text-muted); }
+
+input[type="radio"] {
+  width: auto;
+  margin: 0 0.4rem 0 0;
+}
+input[type="radio"] + label {
+  display: inline-block;
+  margin: 0 1.25rem 0 0;
+  font-weight: 400;
+}
+
+.boton {
+  padding: 0.7rem 1.4rem;
+  font-family: inherit;
+  font-size: var(--tipo-sm);
+  font-weight: 600;
+  color: var(--color-text-inverse);
+  background: var(--color-marca);
+  border: 2px solid var(--color-marca);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.boton:hover {
+  background: var(--color-marca-hover);
+  border-color: var(--color-marca-hover);
+}
+.boton:active { box-shadow: var(--shadow-sm); }
+
+/* --------------------------------------------------------------------------
+   6. Tabla de productos
+   Encabezado con el color de marca, filas alternas y estado de :hover.
+   -------------------------------------------------------------------------- */
+.tabla-productos {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.tabla-productos caption {
+  caption-side: top;
+  padding: 0 0 0.6rem;
+  font-size: var(--tipo-xs);
+  color: var(--color-text-muted);
+  text-align: left;
+}
+.tabla-productos thead th {
+  padding: 0.75rem 0.9rem;
+  font-size: var(--tipo-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--color-text-inverse);
+  background: var(--color-marca);
+  border-bottom: 2px solid var(--color-oro);
+}
+.tabla-productos tbody th,
+.tabla-productos tbody td {
+  padding: 0.7rem 0.9rem;
+  font-size: var(--tipo-sm);
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+.tabla-productos tbody th {
+  font-family: Consolas, 'Courier New', monospace;
+  font-weight: 600;
+  color: var(--color-oro);
+}
+.tabla-productos tbody tr:last-child th,
+.tabla-productos tbody tr:last-child td { border-bottom: none; }
+
+/* Filas alternas */
+.tabla-productos tbody tr:nth-child(even) {
+  background: var(--color-surface-alt);
+}
+
+/* Estado de hover */
+.tabla-productos tbody tr:hover {
+  background: var(--color-marca-light);
+}
+.tabla-productos tbody tr:hover th { color: var(--color-marca-hover); }
+
+form { max-width: 34rem; }
+
+/* --------------------------------------------------------------------------
+   7. Pantallas angostas
+   -------------------------------------------------------------------------- */
+@media (max-width: 40rem) {
+  body > header { flex-direction: column; align-items: flex-start; }
+  .tabla-productos thead th,
+  .tabla-productos tbody th,
+  .tabla-productos tbody td { padding: 0.55rem 0.5rem; }
+}
+
+/* --------------------------------------------------------------------------
+   8. Impresion
+   -------------------------------------------------------------------------- */
+@media print {
+  body { background: var(--color-surface); }
+  .boton { display: none; }
+  .tabla-productos tbody tr:nth-child(even) { background: var(--color-surface); }
+}

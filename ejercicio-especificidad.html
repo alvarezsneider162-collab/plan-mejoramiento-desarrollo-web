@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paso 4 — Prediccion del ejercicio de especificidad</title>
+<link rel="stylesheet" href="css/especificidad.css">
+</head>
+<body class="prueba">
+
+<header class="marca">
+  <img src="assets/img/logo.svg" alt="La Carambola Dorada">
+  <p class="lema">La Carambola Dorada · billar y pool en El Poblado</p>
+</header>
+
+<main class="contenido">
+
+  <h1>Paso 4 — Ejercicio de especificidad</h1>
+  <p class="subtitulo">
+    Sneider Alvarez Santos · ficha 3428392 · 15 de septiembre de 2026
+  </p>
+
+  <h2>1. El enunciado</h2>
+  <p>
+    Tres reglas CSS apuntan al mismo elemento. Solo se declara
+    <code>color</code>, para que lo unico que compita en la cascada sea la
+    especificidad y no otras propiedades.
+  </p>
+
+  <h2>2. El fragmento</h2>
+  <pre class="codigo">/* css/especificidad.css — seccion 1 */
+
+#aviso-1  { color: var(--color-error);   }   /* regla 1 */
+p.aviso   { color: var(--color-success); }   /* regla 2 */
+.aviso    { color: var(--color-info);    }   /* regla 3 */</pre>
+
+  <p>El elemento sobre el que compiten las tres:</p>
+  <pre class="codigo">&lt;p class="aviso" id="aviso-1"&gt;Texto de prueba&lt;/p&gt;</pre>
+
+  <h2>3. La prediccion escrita</h2>
+  <div class="nota">
+    <strong>Prediccion:</strong> gana la <strong>regla 1</strong>, la que usa
+    <code>#aviso-1</code>, y el texto se ve <strong>rojo</strong>
+    (<code>#B3261E</code>). <br>
+    <strong>Por que:</strong> la especificidad se compara <em>antes</em> que el
+    orden del archivo. Un id vale 101 puntos, y le ganan un tipo y una clase
+    (11) y una sola clase (10). Gana la regla escrita de <em>primera</em>. <br>
+    <strong>La trampa:</strong> si se hubiera contestado &laquo;gana la ultima
+    regla escrita&raquo;, se habria equivocado, porque la ultima es la mas
+    debil de las tres. <br>
+    <strong>Segundo caso:</strong> el segundo parrafo no lleva
+    <code>id</code>, asi que la regla 1 queda descartada. Alli gana la
+    <strong>regla 2</strong>, <code>p.aviso</code>, y el texto se ve
+    <strong>verde</strong> (<code>#15803D</code>).
+  </div>
+
+  <h2>4. Comprobacion en el navegador</h2>
+  <table class="especificidades">
+    <caption>Regla, selector, tipo de selector y puntos de especificidad</caption>
+    <thead>
+      <tr>
+        <th scope="col">Regla</th>
+        <th scope="col">Selector</th>
+        <th scope="col">Que aporta</th>
+        <th scope="col">Puntos</th>
+        <th scope="col">Color</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td><code>#aviso-1</code></td>
+        <td>1 id</td>
+        <td class="marca-fila">(1,0,0) = 101</td>
+        <td><span class="muestra-color muestra-error"></span> #B3261E</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td><code>p.aviso</code></td>
+        <td>1 tipo + 1 clase</td>
+        <td class="marca-fila">(0,1,1) = 11</td>
+        <td><span class="muestra-color muestra-success"></span> #15803D</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td><code>.aviso</code></td>
+        <td>1 clase</td>
+        <td class="marca-fila">(0,1,0) = 10</td>
+        <td><span class="muestra-color muestra-info"></span> #15506B</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Los dos recuadros de abajo son el mismo elemento con distinto atributo.
+    Los colores salen del render real del navegador, no de la prediccion:
+  </p>
+
+  <div class="demostracion">
+    <p class="aviso" id="aviso-1">
+      <span class="etiqueta-caja">Con id — compiten las 3 reglas</span>
+      Gana la regla 1: #B3261E
+    </p>
+    <p class="aviso">
+      <span class="etiqueta-caja">Sin id — compiten las reglas 2 y 3</span>
+      Gana la regla 2: #15803D
+    </p>
+  </div>
+
+  <div class="nota">
+    <strong>Resultado medido:</strong> el primer parrafo se renderiza en
+    <code>#B3261E</code> y el segundo en <code>#15803D</code>. Los dos colores
+    coinciden con la prediccion, asi que la prediccion era correcta. Ademas
+    ninguno de los dos casos se resolvio con <code>!important</code>: la cascada
+    normal ya basta cuando se conoce el orden de especificidad.
+  </div>
+
+</main>
+
+</body>
+</html>
