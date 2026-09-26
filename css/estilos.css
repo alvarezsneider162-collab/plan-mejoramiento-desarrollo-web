@@ -1,4 +1,23 @@
 @import url('tokens.css');
+
+/* ==========================================================================
+   LA CARAMBOLA DORADA — Hoja de estilos de la aplicacion
+   Archivo: css/estilos.css
+   Actividad: recuperacion, dia 4
+
+   Reglas que cumple este archivo (criterios de evaluacion):
+     1. Todo color sale de una variable. Ni un hexadecimal suelto, ni un rgb().
+     2. Ningun font-size directo: los cinco tamanos salen de --tipo-*.
+     3. No se usa !important en ninguna regla.
+     4. El estado de foco es visible y en ningun sitio se anula con outline: none.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. Escala tipografica — cinco tamanos en rem
+   Base 1rem = 16px. Progresion de razon corta (en torno a 1,2) para que cada
+   salto se perciba sin romper la lectura del cuerpo de texto.
+   -------------------------------------------------------------------------- */
 :root {
   --tipo-xs:  0.875rem;   /* 14px — encabezados de tabla, pie, texto auxiliar */
   --tipo-sm:  1rem;       /* 16px — cuerpo, etiquetas, botones, celdas        */
@@ -269,17 +288,185 @@ input[type="radio"] + label {
 form { max-width: 34rem; }
 
 /* --------------------------------------------------------------------------
-   7. Pantallas angostas
+   7. Maquetacion del tablero con Grid
+   --------------------------------------------------------------------------
+   Aqui se reparten las dos tecnicas de la actividad, cada una donde toca:
+
+   - GRID para la estructura de la pagina. Se usa grid-template-areas para
+     nombrar cada zona (barra, menu, contenido, pie) en vez de colocar cada
+     bloque con posiciones. Grid es lo adecuado porque las zonas tienen que
+     ocupar filas y columnas a la vez, y ademas permite declarar el ancho
+     fijo del menu y que el contenido ocupe el resto.
+   - FLEXBOX para el interior de la barra, que solo necesita repartir dos
+     elementos en una misma fila. Flexbox es mas simple y sobra para eso.
+
+   En la columna del contenido se usa minmax(0, 1fr) y no 1fr a secas: un
+   1fr tiene minimo automatico igual a min-content, asi que una tabla ancha
+   ensancharia la columna y el menu se saldria de la pantalla. Con
+   minmax(0, 1fr) la columna si puede encogerse por debajo del contenido.
+   -------------------------------------------------------------------------- */
+.panel {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "barra  barra"
+    "menu   contenido"
+    "pie    pie";
+  min-height: 100vh;
+}
+
+/* --- Barra superior: FLEXBOX, porque solo reparte dos elementos en fila --- */
+.panel__barra {
+  grid-area: barra;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--color-marca);
+  color: var(--color-text-inverse);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.panel__barra img { width: 11rem; }
+
+.panel__sesion {
+  margin: 0;
+  max-width: none;
+  font-size: var(--tipo-xs);
+  color: var(--color-oro-tenue);
+}
+
+/* --- Menu lateral: GRID para fijarlo a 240 px --- */
+.panel__menu {
+  grid-area: menu;
+  background: var(--color-marca-hover);
+  padding: 1.2rem 1rem;
+  color: var(--color-text-inverse);
+}
+
+.panel__menu h2 {
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.35rem;
+  font-size: var(--tipo-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-oro-tenue);
+  border-bottom: 1px solid var(--color-oro);
+}
+
+.panel__menu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.panel__menu a {
+  display: block;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-inverse);
+  text-decoration: none;
+}
+
+.panel__menu a:hover { background: var(--color-marca); }
+
+.panel__menu a[aria-current="page"] {
+  font-weight: 700;
+  background: var(--color-marca);
+  box-shadow: inset 3px 0 0 var(--color-oro);
+}
+
+/* --- Contenido: GRID, y la columna ya se acota con minmax(0, 1fr) --- */
+.panel__contenido {
+  grid-area: contenido;
+  padding: 1.6rem;
+  min-width: 0;
+}
+
+.panel__contenido section,
+.panel__contenido aside { margin-bottom: 2.2rem; }
+
+/* La tabla es ancha y no cabe entera en ventanas angostas. En vez de dejar
+   que desborde la pagina, este contenedor le da su propio desplazamiento
+   horizontal: la tabla se mueve, pero la maquetacion de Grid no se rompe. */
+.tabla-scroll {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+/* --- Pie --- */
+.panel__pie {
+  grid-area: pie;
+  padding: 0.8rem 1.2rem;
+  background: var(--color-surface);
+  border-top: 1px solid var(--border-color);
+  font-size: var(--tipo-xs);
+  color: var(--color-text-muted);
+}
+
+.panel__pie p { margin: 0; }
+
+/* --- Fila de indicadores: GRID con auto-fit, que se reacomoda solo --- */
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.tarjeta {
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--color-marca);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.tarjeta h3 {
+  margin: 0 0 0.35rem;
+  font-size: var(--tipo-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.tarjeta p {
+  margin: 0;
+  max-width: none;
+  font-size: var(--tipo-lg);
+  font-weight: 700;
+  color: var(--color-marca);
+}
+
+/* --------------------------------------------------------------------------
+   8. Pantallas angostas
+   --------------------------------------------------------------------------
+   El menu lateral NO se apila ni se oculta: el criterio de la actividad pide
+   que conserve su ancho de 240 px. Lo que se reduce es el relleno del
+   contenido y el padding de las tarjetas, para que el area de trabajo se
+   siga viendo comoda en ventanas angostas.
    -------------------------------------------------------------------------- */
 @media (max-width: 40rem) {
   body > header { flex-direction: column; align-items: flex-start; }
   .tabla-productos thead th,
   .tabla-productos tbody th,
   .tabla-productos tbody td { padding: 0.55rem 0.5rem; }
+  .panel__barra { padding: 0.5rem 0.75rem; }
+  .panel__barra img { width: 8rem; }
+  .panel__contenido { padding: 1rem 0.75rem; }
+  .panel__menu { padding: 1rem 0.6rem; }
+  .indicadores { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 }
 
 /* --------------------------------------------------------------------------
-   8. Impresion
+   9. Impresion
    -------------------------------------------------------------------------- */
 @media print {
   body { background: var(--color-surface); }
