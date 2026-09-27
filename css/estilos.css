@@ -159,6 +159,14 @@ body > footer {
   color: var(--color-text-muted);
   margin: 0 0 1.5rem;
 }
+/* Texto de ayuda pegado a un campo: para el minimo de la contrasena, para
+   explicar por que un mensaje de error es generico, para ese tipo de cosa.
+   Mismo tamano y color que .lema, pero pegado al campo que explica. */
+.pantalla-ingreso .sub {
+  font-size: var(--tipo-xs);
+  color: var(--color-text-muted);
+  margin: -0.5rem 0 1rem;
+}
 
 fieldset {
   margin: 0 0 1.25rem;

@@ -6,14 +6,32 @@ declare(strict_types=1);
    Archivo: app/config/conexion.php
    Actividad de recuperacion, dia 9, punto 3
 
-   Este archivo se escribe una vez y todo el proyecto lo reutiliza. La clase
-   guarda la conexion en una variable estatica, asi que aunque veinte archivos
-   la pidan, se abre una sola conexion y no veinte.
+     Este archivo se escribe una vez y todo el proyecto lo reutiliza. La clase
+     guarda la conexion en una variable estatica, asi que aunque veinte archivos
+     la pidan, se abre una sola conexion y no veinte.
 
-   Sigue el patron que da el enunciado. Lo unico que se le anade es un manejo
-   de error que no se traga la excepcion: si MySQL no esta arriba, la pagina
-   dice cual fue el problema en vez de mostrar una pantalla en blanco.
-   =========================================================================== */
+     Sigue el patron que da el enunciado. Lo unico que se le anade es un manejo
+     de error que no se traga la excepcion: si MySQL no esta arriba, la pagina
+     dice cual fue el problema en vez de mostrar una pantalla en blanco.
+
+     ---------------------------------------------------------------------------
+     LA ZONA HORARIA DE LA APLICACION
+     ---------------------------------------------------------------------------
+     Este es el unico archivo que.include TODO el proyecto: las cuatro paginas
+     lo cargan, y el resto de archivos de app/ llegan a el a traves de ahi. Por
+     eso la zona horaria se fija aqui y no en cada pagina, para que haya un solo
+     sitio donde cambiarla.
+
+     Va puesta a proposito, porque php.ini de XAMPP trae Europe/Berlin, y esta
+     aplicacion es colombiana. Sin esto se mistura el reloj de PHP con el de
+     MySQL, que estan siete horas distintos, y la hora de ingreso que se le
+     muestra a la persona sale con la hora de Berlin.      Tambien hacia que el
+     bloqueo de la cuenta, que se compara contra una fecha que escribio MySQL,
+     se leyera siete horas antes de expirar de verdad.
+     =========================================================================== */
+
+date_default_timezone_set('America/Bogota');
+
 
 final class Conexion
 {
