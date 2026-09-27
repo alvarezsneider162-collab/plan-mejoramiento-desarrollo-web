@@ -32,7 +32,7 @@
   const cerrar = document.querySelector(".menu-cerrar");
   const panel = document.getElementById("menu-lateral");
 
-  /* login.html no tiene menú lateral, así que aquí no hay nada que hacer.
+  /* login.php no tiene menú lateral, así que aquí no hay nada que hacer.
      Sin esta salida, boton sería null y boton.addEventListener(...) lanzaría
      un TypeError que pararía todo el archivo. */
   if (!interruptor || !boton) return;

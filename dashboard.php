@@ -1,3 +1,74 @@
+<?php
+declare(strict_types=1);
+
+/* ===========================================================================
+   LA CARAMBOLA DORADA - Tablero de control
+   Archivo: dashboard.php
+   Actividad de recuperacion, dia 11, punto 2 y punto 3
+
+   Antes que nada: este archivo se llamaba dashboard.html y lo era de verdad, un
+   HTML plano. El dia 11 lo paso a ser .php, y no por capricho de renombrar, sino
+   porque dos cosas que este tablero tiene que hacer no se pueden hacer desde un
+   .html.
+
+   La primera es el punto 2: la barra de arriba tiene que decir el nombre y el
+   rol de quien esta entrando. Un archivo .html no tiene con quien hablar: lo que
+   el navegador recibe es el texto del archivo tal cual, sin ejecutar nada. Si el
+   nombre estuviera escrito dentro, en el HTML saldria siempre el mismo nombre
+   en la pantalla de todo el mundo, que es justo lo que hacia el "Sneider
+   Alvarez" que estaba puesto a mano. Para leer la sesion hace falta PHP.
+
+   Y la segunda es el punto 3: la pagina tiene que ser privada. Un guardian de
+   sesiones es codigo PHP; un .html no lo puede ejecutar ni aunque se lo metan
+   dentro. Renombrar el archivo a .php no es un cambio de nombre: es lo que
+   hace posible que la proteccion exista.
+
+   La razon tecnica de que un .html no pueda, esta en la configuracion de Apache
+   de XAMPP, en C:/xampp/apache/conf/extra/httpd-xampp.conf:
+
+       <FilesMatch "\.php$">
+           SetHandler application/x-httpd-php
+       </FilesMatch>
+
+   Solo lo que acaba en .php recibe el manejador de PHP. Cualquier otra
+   extension se sirve tal cual, como texto. Por eso el tablero era estatico.
+
+   ---------------------------------------------------------------------------
+   POR QUE EL GUARDIAN VA PRIMERO DE TODO
+   ---------------------------------------------------------------------------
+   Este include hace tres cosas en este orden: abre la sesion con el nombre de
+   cookie y los parametros correctos, comprueba que haya sesion, y corta si hay
+   algo que no cuadre. Entre el require y el <!DOCTYPE html> no hay ni una linea
+   de HTML, y a proposito.
+
+   Si el HTML empieza a pintarse antes de comprobar la sesion, el navegador
+   recibe los primeros bytes de la pagina, los pinta, y solo entonces llega el
+   302 con el salto al ingreso. Durante ese instante el tablero se ve en
+   pantalla sin ningun dato de verdad, y ademas el visitante ya empieza a
+   descargar recursos que no le sirven. Con el include primero no se emite ni un
+   solo byte de la pagina hasta que se sabe que la sesion es buena.
+
+   El include NO lleva "once" a proposito, por la misma razon que en el resto del
+   proyecto: include_once tiene que mirar el archivo en disco en cada inclusion
+   para comparar rutas, y con require_once PHP resuelve el camino una vez. Este
+   archivo se pide una vez por peticion, pero la costumbre se mantiene igual en
+   todo el proyecto para que el criterio sea el mismo en todas partes.
+
+   ---------------------------------------------------------------------------
+   QUE SE VE SI NO HAY SESION
+   ---------------------------------------------------------------------------
+   El guardian manda a login.php?m=requiere_ingreso, y login.php explica que
+   hace falta entrar. No se dice nada de por que: si aqui se distinguiera "no has
+   entrado" de "tu sesion se acabo", la pagina estaria confirmando informacion
+   sobre la sesion de otra persona.
+   =========================================================================== */
+
+/* El guardian va el primero, antes de la cabecera HTML. */
+require_once __DIR__ . '/app/seguridad/guardia.php';
+
+/* La barra de arriba la pinta el parcial, con el nombre y el rol de verdad. */
+$etiqueta = 'Sala 1';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,9 +89,7 @@
         <span class="boton-menu__texto">Menú</span>
       </button>
       <img src="assets/img/logo.svg" alt="La Carambola Dorada">
-      <p class="panel__sesion">
-        <strong>Sala 1</strong> &middot; Cajero: Sneider Alvarez
-      </p>
+      <?php require __DIR__ . '/app/parciales/barra.php'; ?>
     </header>
 
     <label class="menu-velo" for="interruptor-menu"></label>
@@ -30,10 +99,12 @@
       <nav aria-labelledby="menu-titulo-lateral">
         <h2 id="menu-titulo-lateral">Menú principal</h2>
         <ul>
-          <li><a href="dashboard.html" aria-current="page">Tablero</a></li>
-          <li><a href="productos.html">Productos</a></li>
+          <li><a href="dashboard.php" aria-current="page">Tablero</a></li>
+          <li><a href="productos.php">Productos</a></li>
           <li><a href="componentes.html">Componentes</a></li>
-          <li><a href="login.html">Cerrar sesión</a></li>
+          <li><a href="usuarios.php">Usuarios</a></li>
+          <li><a href="login.php">Ingreso</a></li>
+          <li><a href="salir.php">Cerrar sesi&oacute;n</a></li>
         </ul>
       </nav>
     </aside>

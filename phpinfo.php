@@ -1,6 +1,13 @@
 <?php
 declare(strict_types=1);
 
+/* Dia 11, punto 1: pagina PRIVADA. El guardian va antes de la comprobacion de
+   version y antes del primer byte de la pagina. Un phpinfo() publica la version
+   exacta de PHP, su ruta de instalacion y las extensiones activas: ayuda mucho a
+   quien busca fallos contra esa version, asi que ahora, ademas de estar en el
+   .gitignore, hace falta una sesion valida para verlo. */
+require_once __DIR__ . '/app/seguridad/guardia.php';
+
 /* Punto 1 del dia 9: comprobar la version de PHP con phpinfo().
    Este archivo es solo una herramienta de comprobacion, por eso esta en el
    .gitignore: publicar un phpinfo() en un servidor real revela la ruta de
@@ -42,7 +49,13 @@ $faltan       = array_values(array_filter(
   <div class="panel">
     <header class="panel__barra">
       <img src="assets/img/logo.svg" alt="La Carambola Dorada">
-      <p class="panel__sesion"><strong>Entorno</strong> &middot; Punto 1 del día 9</p>
+      <?php
+      /* Mismo parcial que el resto de pantallas del panel. Esta hoja de datos no
+         tiene menu lateral, asi que el parcial solo aporta el parrafo de la
+         sesion y el <header> se queda aqui. */
+      $etiqueta = 'Entorno';
+      require __DIR__ . '/app/parciales/barra.php';
+      ?>
     </header>
 
     <main class="panel__contenido">

@@ -12,7 +12,8 @@ declare(strict_types=1);
 
    QUE HAY QUE MIRAR EN ESTE ARCHIVO, EN ESTE ORDEN:
 
-     1. iniciarSesion() antes de tokenCsrf(), porque el token vive en la sesion.
+     1. iniciarSesionSegura() antes de tokenCsrf(), porque el token vive en la
+        sesion.
      2. El POST se corta si el token no valia. No se mira ni el correo ni la
         contrasena: si la peticion no vino de este formulario, no se procesa.
      3. crearUsuario() hace el INSERT con el hash, en Autenticacion.php.
@@ -29,7 +30,7 @@ require_once __DIR__ . '/app/seguridad/sesion.php';
 require_once __DIR__ . '/app/seguridad/csrf.php';
 require_once __DIR__ . '/app/controladores/registro.php';
 
-iniciarSesion();
+iniciarSesionSegura();
 
 $errores = [];
 $creado  = null;

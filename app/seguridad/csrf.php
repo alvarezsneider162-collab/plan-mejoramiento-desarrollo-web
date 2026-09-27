@@ -56,8 +56,8 @@ const HTTP_TOKEN_INVALIDO = 403;
  *
  * Ojo con una cosa importante: la sesion tiene que estar abierta antes de
  * llamar a esta funcion, porque el token vive dentro de ella. De eso se encarga
- * iniciarSesion() de app/seguridad/sesion.php, que todas las paginas llaman
- * antes de usar el token.
+ * iniciarSesionSegura() de app/seguridad/sesion.php, que todas las paginas
+ * llaman antes de usar el token.
  */
 function tokenCsrf(): string
 {

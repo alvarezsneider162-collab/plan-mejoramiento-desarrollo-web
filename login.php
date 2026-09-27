@@ -12,7 +12,8 @@ declare(strict_types=1);
 
    QUE HAY QUE MIRAR EN ESTE ARCHIVO, EN ESTE ORDEN:
 
-     1. iniciarSesion() antes de tokenCsrf(), porque el token vive en la sesion.
+     1. iniciarSesionSegura() antes de tokenCsrf(), porque el token vive en la
+        sesion.
      2. El POST se corta con un 403 si el token no valia. El 403 sale de una
      constante de app/seguridad/csrf.php, donde esta escrito por que no se usa
      el 419 del ejemplo del enunciado.
@@ -41,7 +42,21 @@ require_once __DIR__ . '/app/seguridad/sesion.php';
 require_once __DIR__ . '/app/seguridad/csrf.php';
 require_once __DIR__ . '/app/controladores/login.php';
 
-iniciarSesion();
+iniciarSesionSegura();
+
+/* Los motivos por los que el guardian del dia 11 manda aqui. Cada uno es una
+   situacion distinta y el visitante merece saber cual fue, sin que se le diga
+   nada sobre la sesion de otra persona. */
+$motivos = [
+    'requiere_ingreso' => 'Esta página es privada. Entra con tu cuenta para verla.',
+    'sesion_invalida'  => 'La sesión se cerró porque se detectó otro navegador. Vuelve a entrar.',
+    'sesion_expirada'  => 'Tu sesión se cerró por inactividad o por estar abierta demasiado tiempo. Vuelve a entrar.',
+    'sesion_cerrada'   => 'Cerraste la sesión. Entra otra vez cuando quieras.',
+];
+$avisoSesion = '';
+if (isset($_GET['m']) && is_string($_GET['m']) && isset($motivos[$_GET['m']])) {
+    $avisoSesion = $motivos[$_GET['m']];
+}
 
 $error      = '';
 $ingreso    = null;
@@ -55,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
            tampoco cuenta como intento de alguien. */
         http_response_code(HTTP_TOKEN_INVALIDO);
         $codigo = HTTP_TOKEN_INVALIDO;
-        $error  = 'La ósesión del formulario no es válida. Recargue la página e intente de nuevo.';
+        $error  = 'La sesión del formulario no es válida. Recargue la página e intente de nuevo.';
     } else {
         try {
             $resultado = procesarLogin(Conexion::obtener(), $_POST);
@@ -68,11 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($ingreso !== null) {
-                /* Solo cuando la contrasena esta verificada de verdad. Aqui ya
-                   se puede abrir la sesion, porque hasta este punto lo unico
-                   que habia en $_POST eran dos textos sin comprobar. */
+                /* Solo cuando la contrasena esta verificada de verdad. En el dia 11
+                   se abre la sesion y se redirige al tablero protegido. */
                 abrirSesion($ingreso);
-                $yaEntrado = usuarioActual();
+                redirigir(urlApp('dashboard.php'));
             }
         } catch (Throwable $e) {
             $error = 'No se pudo comprobar el ingreso. Revisa que MySQL esté encendido. Detalle: '
@@ -103,6 +117,10 @@ $correo = esc($_POST['correo'] ?? '');
     <h1>Ingreso al panel de gestión</h1>
     <p class="lema">Sistema de gestión de salones de billar</p>
 
+    <?php if ($avisoSesion !== ''): ?>
+      <p class="alerta" role="status"><?= esc($avisoSesion) ?></p>
+    <?php endif; ?>
+
     <?php if ($error !== ''): ?>
       <p class="alerta alerta--error" id="error-acceso" role="alert"><?= esc($error) ?></p>
     <?php endif; ?>
@@ -114,12 +132,15 @@ $correo = esc($_POST['correo'] ?? '');
         <ul>
           <li>Correo: <?= esc($yaEntrado['correo']) ?></li>
           <li>Rol: <span class="badge badge--exito" id="rol-usuario"><?= esc($yaEntrado['rol']) ?></span></li>
-          <li>Entró a las: <time><?= esc($yaEntrado['inicio_sesion']) ?></time></li>
+          <li>Entró a las: <time><?= esc($yaEntrado['inicio_legible']) ?></time></li>
         </ul>
         <p>El nombre de arriba sale de la base de datos y se imprime con
         <code>htmlspecialchars()</code>. Si ese nombre trae un
         <code>&lt;script&gt;</code>, se ve escrito y no se ejecuta.</p>
-        <p><a class="enlace" href="registro.php">Registrar otro usuario</a></p>
+        <p>
+          <a class="boton" href="<?= esc(urlApp('dashboard.php')) ?>" style="display:inline-block; margin-right: 0.8rem;">Ir al Tablero</a>
+          <a class="enlace" href="registro.php">Registrar otro usuario</a>
+        </p>
       </div>
     <?php else: ?>
 

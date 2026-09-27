@@ -57,6 +57,20 @@
 
 html { -webkit-text-size-adjust: 100%; }
 
+/* Un correo largo o un codigo sin espacios no tiene por donde partirse, y en
+   cuanto la pantalla se achica empuja el ancho de la pagina y aparece la barra
+   horizontal que la regla 5 de la cabecera prohibe. El navegador no parte una
+   palabra en el @ ni en el punto, asi que "desborde.1756971234567@prueba.local"
+   se queda entero y a 320px eso son 357 px de contenido en 305 px de hueco.
+
+   Con overflow-wrap el corte se permite en cualquier punto, pero SOLO cuando la
+   palabra no cabe: una palabra que sí cabe sigue sin partirse. Por eso va en
+   la base y no dentro de un @media, y por eso es "anywhere" y no "break-all":
+   break-all parte incluso las palabras que caben, y eso se lee mal. */
+body {
+  overflow-wrap: anywhere;
+}
+
 body {
   margin: 0;
   font-family: var(--font-body);

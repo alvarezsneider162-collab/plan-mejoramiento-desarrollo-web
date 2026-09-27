@@ -1,6 +1,13 @@
 <?php
 declare(strict_types=1);
 
+/* Dia 11, punto 1: esta pagina es PRIVADA. El guardian va en la primera linea,
+   antes de nada, porque header() y Set-Cookie tienen que salir antes del primer
+   byte de la pagina. Sin sesion valida, aqui no se llega a ver ni la primera fila.
+   El listado ya venia leyendose de MySQL desde el dia 9; lo que cambia hoy es
+   que hace falta entrar para verlo. */
+require_once __DIR__ . '/app/seguridad/guardia.php';
+
 /* ===========================================================================
    LA CARAMBOLA DORADA - Listado de productos
    Archivo: productos.php
@@ -28,6 +35,15 @@ declare(strict_types=1);
 require_once __DIR__ . '/app/config/conexion.php';
 require_once __DIR__ . '/app/modelos/ProductoModelo.php';
 
+/* esc() viene de aca y no de una copia local. Antes este archivo traia su propia
+   function esc(), y en cuanto se le puso el guardian arriba quedo en medio una
+   segunda definicion: PHP da "Cannot redeclare esc()" y, como las funciones se
+   declaran al compilar el archivo, el fallo salia ANTES de que el guardian
+   llegara a redirigir. Una pagina privada devolvia 200 con un error en vez de
+   302. El require_once de arriba no hacia nada, solo deja la dependencia
+   escrita para que el proximo que pase por aca no reinvente la funcion. */
+require_once __DIR__ . '/app/seguridad/salida.php';
+
 /* El texto que el usuario escribio. Se lee de $_GET, que es un arreglo, y se
    pasa por htmlspecialchars apenas entra, antes de tocar la base de datos. */
 $texto = trim((string) ($_GET['buscar'] ?? ''));
@@ -51,12 +67,6 @@ try {
            . 'y la clave correctas.';
     $detalle = $e->getMessage();
 }
-
-/** Escapa un valor para poder ponerlo dentro del HTML. */
-function esc(mixed $valor): string
-{
-    return htmlspecialchars((string) $valor, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -78,9 +88,14 @@ function esc(mixed $valor): string
         <span class="boton-menu__texto">Menú</span>
       </button>
       <img src="assets/img/logo.svg" alt="La Carambola Dorada">
-      <p class="panel__sesion">
-        <strong>Inventario</strong> &middot; Sneider Alvarez
-      </p>
+      <?php
+      /* La barra de arriba la pinta app/parciales/barra.php, con el nombre y el
+         rol del usuario que esta en la sesion. Antes era un <p> escrito a mano
+         aqui con "Sneider Alvarez" fijo; el punto 2 del dia 11 pide que diga
+         quien esta entrando de verdad, y eso solo se puede pintar desde PHP. */
+      $etiqueta = 'Inventario';
+      require __DIR__ . '/app/parciales/barra.php';
+      ?>
     </header>
 
     <label class="menu-velo" for="interruptor-menu"></label>
@@ -90,10 +105,12 @@ function esc(mixed $valor): string
       <nav aria-labelledby="menu-titulo-lateral">
         <h2 id="menu-titulo-lateral">Menú principal</h2>
         <ul>
-          <li><a href="dashboard.html">Tablero</a></li>
+          <li><a href="dashboard.php">Tablero</a></li>
           <li><a href="productos.php" aria-current="page">Productos</a></li>
           <li><a href="componentes.html">Componentes</a></li>
-          <li><a href="login.html">Cerrar sesión</a></li>
+          <li><a href="usuarios.php">Usuarios</a></li>
+          <li><a href="login.php">Ingreso</a></li>
+          <li><a href="salir.php">Cerrar sesi&oacute;n</a></li>
         </ul>
       </nav>
     </aside>

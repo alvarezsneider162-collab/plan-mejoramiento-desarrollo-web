@@ -37,6 +37,13 @@ declare(strict_types=1);
 /**
  * Prepara un valor para poder ponerlo dentro del HTML.
  *
+ * ESTA FUNCION NO SE COPIA EN LAS PAGINAS. Se incluye con require_once y se usa
+ * desde aca. Una copia local en una pagina que ademas cargue el guardian rompe
+ * todo: PHP da "Cannot redeclare esc()" y, como las funciones se declaran al
+ * compilar el archivo y no al ejecutarlo, el fallo ocurre antes de que el
+ * guardian llegue a comprobar la sesion. La pagina privada responde 200 con un
+ * error en lugar de 302, que es justo el resultado contrario al buscado.
+ *
  * ENT_QUOTES  escapa tambien las comillas simples, que sin esto se escaparian
  *             de un atributo como title="..." y romperian el HTML.
  * ENT_SUBSTITUTE  si el texto trae una secuencia de bytes que no es UTF-8
