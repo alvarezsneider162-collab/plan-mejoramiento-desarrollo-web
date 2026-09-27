@@ -9,18 +9,23 @@
 <body>
   <div class="panel">
 
+    <input type="checkbox" class="interruptor-menu" id="interruptor-menu" aria-label="Abrir o cerrar el menú lateral">
+
     <header class="panel__barra">
-      <button type="button" class="boton-menu" aria-controls="menu-lateral" aria-expanded="false">
+      <label class="boton-menu" for="interruptor-menu">
         <span class="boton-menu__icono" aria-hidden="true"></span>
         <span class="boton-menu__texto">Menú</span>
-      </button>
+      </label>
       <img src="assets/img/logo.svg" alt="La Carambola Dorada">
       <p class="panel__sesion">
         <strong>Guía de estilo</strong> &middot; Día 6
       </p>
     </header>
 
-    <aside class="panel__menu abierto" id="menu-lateral">
+    <label class="menu-velo" for="interruptor-menu"></label>
+
+    <aside class="panel__menu" id="menu-lateral">
+      <label class="menu-cerrar" for="interruptor-menu">Cerrar</label>
       <nav aria-labelledby="menu-titulo-lateral">
         <h2 id="menu-titulo-lateral">Menú principal</h2>
         <ul>
@@ -327,11 +332,34 @@
       <!-- ============ MENU ============ -->
       <section>
         <h2>Menú lateral</h2>
-        <p>En el teléfono está fuera de pantalla y se abre con la clase
-        <code>abierto</code>, que hoy se aplica a mano en el HTML. El día 8 se
-        conectará a JavaScript. Cuando la persona pide menos movimiento
-        (<code>prefers-reduced-motion</code>), la transición directamente no se
-        declara, sin necesidad de <code>!important</code>.</p>
+        <p>En el teléfono el menú está fuera de pantalla y hay <strong>dos formas de
+        abrirlo, ambas sin JavaScript</strong>:</p>
+        <p>
+          <strong>1. La clase <code>abierto</code>, aplicada a mano.</strong><br>
+          Se agrega al HTML y el menú entra deslizándose:
+        </p>
+        <pre class="codigo"><code>&lt;aside class="panel__menu abierto" id="menu-lateral"&gt;</code></pre>
+        <p>
+          <strong>2. El interruptor, que lo hace funcionar con el dedo.</strong><br>
+          Un <code>&lt;button&gt;</code> no cambia de estado por sí solo: para eso hace
+          falta JavaScript. Como esta actividad lo resuelve solo con CSS, el control
+          real es un <code>&lt;input type="checkbox"&gt;</code> casi invisible y el
+          <code>&lt;label&gt;</code> hace de botón visible. Al marcar la casilla, el
+          hermano general <code>~</code> abre el menú; al desmarcarlo lo cierra:
+        </p>
+        <pre class="codigo"><code>.interruptor-menu:checked ~ .panel__menu {
+  transform: translateX(0);
+  visibility: visible;
+}</code></pre>
+        <p>
+          La casilla se oculta con el mismo patrón que el <code>thead</code> (solo de
+          la vista, no del árbol de accesibilidad), así que sigue siendo enfocable con
+          el teclado y el anillo de foco se pinta en el <code>label</code>.
+          El <strong>velo</strong> es la capa oscura que aparece detrás del menú: al
+          tocarla se desmarca la casilla, y por eso también cierra. El día 8 se
+          sustituye el <code>label</code> por el <code>&lt;button&gt;</code> real y su
+          JavaScript, y se le añade <code>aria-expanded</code> al botón.
+        </p>
         <p>
           Estado cerrado: <code>transform: translateX(-100%)</code> con
           <code>visibility: hidden</code>, para que el menú cerrado no reciba el
@@ -340,7 +368,18 @@
           Desde <code>lg</code>: <code>position: static</code>, el menú siempre
           visible y el botón desaparece.
         </p>
-        <p>En esta página el menú está abierto a propósito para poder fotografiarlo.</p>
+        <p>
+          La transición se declara <strong>dentro de</strong>
+          <code>@media (prefers-reduced-motion: no-preference)</code>, en vez de
+          anularla con <code>!important</code> como hace el ejemplo. Si la persona
+          pidió menos movimiento, directamente no hay transición. Al abrir, la
+          <code>visibility</code> va sin retardo: si no, el menú se deslizaría
+          durante 0,25 s sin verse.
+        </p>
+        <p>
+          En esta página el menú <strong>arranca cerrado</strong>, igual que en el
+          tablero y en productos. Toca el botón de la barra para abrirlo.
+        </p>
       </section>
 
     </main>

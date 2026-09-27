@@ -348,6 +348,9 @@ input[type="checkbox"] + label {
 .boton-menu:hover { background: var(--color-marca); }
 .boton-menu:active { background: var(--color-marca-hover); }
 .boton-menu[aria-expanded="true"] { background: var(--color-marca-hover); }
+/* La regla anterior hoy no la usa nadie: con el interruptor CSS el boton es un
+   <label>, y aria-expanded no es valido ahi. Se conserva a proposito, porque el
+   <button> real del dia 8 la va a usar al marcarlo desde JavaScript. */
 .boton-menu__icono {
   display: block;
   width: 1.1rem;
@@ -355,6 +358,72 @@ input[type="checkbox"] + label {
   background: currentColor;
   box-shadow: 0 -5px 0 currentColor, 0 5px 0 currentColor;
 }
+
+/* --------------------------------------------------------------------------
+   8b. Interruptor del menú SIN JavaScript
+   Un <button> no cambia de estado por sí solo: para eso hace falta JavaScript.
+   Como esta actividad lo resuelve solo con CSS, el control real es un
+   <input type="checkbox"> casi invisible y el <label> hace de botón visible.
+   Al marcar la casilla, el hermano general "~" abre el menú; al desmarcarlo
+   lo cierra. El día 8 se sustituye el label por el <button> real y su JS.
+   -------------------------------------------------------------------------- */
+
+/* La casilla se oculta solo de la vista (mismo patrón que el thead) para que
+   siga siendo enfocable con el teclado y announces su estado. */
+.interruptor-menu {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+/* Botón marcado: mismo aspecto activo que daba [aria-expanded="true"]. */
+.interruptor-menu:checked ~ .panel__barra .boton-menu {
+  background: var(--color-marca-hover);
+}
+
+/* Foco: la casilla está oculta, así que el anillo se pinta en el label. */
+.interruptor-menu:focus-visible ~ .panel__barra .boton-menu {
+  outline: 3px solid var(--color-oro);
+  outline-offset: 2px;
+}
+
+/* Velo: capa que atenúa el contenido mientras el menú está abierto. Al
+   tocarla se desmarca la casilla, así que sirve de "cerrar" sin JavaScript. */
+.menu-velo {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  background: var(--velo-menu);
+  cursor: pointer;
+}
+.interruptor-menu:checked ~ .menu-velo { display: block; }
+
+/* Botón de cerrar dentro del propio menú. */
+.menu-cerrar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.25rem;
+  margin-bottom: 0.9rem;
+  padding: 0.3rem 0.6rem;
+  font-size: var(--tipo-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-inverse);
+  background: transparent;
+  border: 1px solid var(--color-oro-tenue);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.menu-cerrar:hover { background: var(--color-marca); }
 
 /* --------------------------------------------------------------------------
    9. Maquetación del tablero con Grid — base: TELÉFONO (una columna)
@@ -415,6 +484,14 @@ input[type="checkbox"] + label {
   visibility: hidden;        /* cerrado = no se puede enfocar con el teclado */
 }
 .panel__menu.abierto { transform: translateX(0); visibility: visible; }
+
+/* Mismo apertura, pero disparada por el interruptor en vez de por la clase
+   escrita a mano. Las dos formas conviven: componentes.html sigue mostrando
+   la clase .abierto aplicada a mano, como pide el enunciado. */
+.interruptor-menu:checked ~ .panel__menu {
+  transform: translateX(0);
+  visibility: visible;
+}
 
 .panel__menu h2 {
   margin: 0 0 0.75rem;
@@ -745,6 +822,12 @@ input[type="checkbox"] + label {
   }
   .boton-menu { display: none; }   /* en escritorio el menu ya esta a la vista */
 
+  /* El interruptor conserva su estado al girar el telefono: si alguien abrio
+     el menu en vertical y luego cruza los 1024 px, el velo taparia la pagina
+     sin que haya ningun boton visible para quitarlo. Aqui se anula. */
+  .interruptor-menu:checked ~ .menu-velo { display: none; }
+  .menu-cerrar { display: none; }
+
   .panel__contenido { padding: 1.6rem; }
   body > main { padding: 2rem 2rem; }
 }
@@ -763,7 +846,10 @@ input[type="checkbox"] + label {
   .panel__menu {
     transition: transform 0.25s ease, visibility 0s linear 0.25s;
   }
-  .panel__menu.abierto {
+  .panel__menu.abierto,
+  .interruptor-menu:checked ~ .panel__menu {
+    /* visibility sin retardo al abrir: si no, la casilla sigue oculta el menu
+       durante los 0.25 s de la deslizacion y entra a oscuras. */
     transition: transform 0.25s ease, visibility 0s;
   }
   .boton, .boton-menu, .tarjeta, .campo, .panel__menu a, .alerta, .badge, header nav a {
@@ -819,6 +905,24 @@ code {
   border: 1px solid var(--border-color);
   border-radius: 3px;
   padding: 0 3px;
+}
+/* Bloque de código de varias lineas: sin esto el <pre> interno exigiria
+   scroll horizontal en el telefono, que es justo lo que no queremos. */
+pre.codigo {
+  margin: 0 0 0.8rem;
+  padding: 0.7rem 0.8rem;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--color-marca);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre.codigo code {
+  background: none;
+  border: 0;
+  padding: 0;
 }
 .rotulo-demo {
   display: block;

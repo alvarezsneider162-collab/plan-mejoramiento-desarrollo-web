@@ -9,18 +9,23 @@
 <body>
   <div class="panel">
 
+    <input type="checkbox" class="interruptor-menu" id="interruptor-menu" aria-label="Abrir o cerrar el menú lateral">
+
     <header class="panel__barra">
-      <button type="button" class="boton-menu" aria-controls="menu-lateral" aria-expanded="false">
+      <label class="boton-menu" for="interruptor-menu">
         <span class="boton-menu__icono" aria-hidden="true"></span>
         <span class="boton-menu__texto">Menú</span>
-      </button>
+      </label>
       <img src="assets/img/logo.svg" alt="La Carambola Dorada">
       <p class="panel__sesion">
         <strong>Sala 1</strong> &middot; Cajero: Sneider Alvarez
       </p>
     </header>
 
+    <label class="menu-velo" for="interruptor-menu"></label>
+
     <aside class="panel__menu" id="menu-lateral">
+      <label class="menu-cerrar" for="interruptor-menu">Cerrar</label>
       <nav aria-labelledby="menu-titulo-lateral">
         <h2 id="menu-titulo-lateral">Menú principal</h2>
         <ul>
