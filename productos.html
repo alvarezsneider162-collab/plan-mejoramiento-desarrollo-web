@@ -12,10 +12,11 @@
     <input type="checkbox" class="interruptor-menu" id="interruptor-menu" aria-label="Abrir o cerrar el menú lateral">
 
     <header class="panel__barra">
-      <label class="boton-menu" for="interruptor-menu">
+      <button type="button" class="boton-menu" id="boton-menu"
+              aria-expanded="false" aria-controls="menu-lateral">
         <span class="boton-menu__icono" aria-hidden="true"></span>
         <span class="boton-menu__texto">Menú</span>
-      </label>
+      </button>
       <img src="assets/img/logo.svg" alt="La Carambola Dorada">
       <p class="panel__sesion">
         <strong>Inventario</strong> &middot; Sneider Alvarez
@@ -25,7 +26,7 @@
     <label class="menu-velo" for="interruptor-menu"></label>
 
     <aside class="panel__menu" id="menu-lateral">
-      <label class="menu-cerrar" for="interruptor-menu">Cerrar</label>
+      <button type="button" class="menu-cerrar">Cerrar</button>
       <nav aria-labelledby="menu-titulo-lateral">
         <h2 id="menu-titulo-lateral">Menú principal</h2>
         <ul>
@@ -43,8 +44,16 @@
     <section>
       <h2>Inventario del salón</h2>
 
+      <div class="buscador">
+        <label for="buscar">Buscar en el inventario</label>
+        <input type="search" id="buscar" name="buscar" autocomplete="off"
+               placeholder="Escribe un nombre, una categoría o un código"
+               aria-describedby="buscador-conteo">
+        <p class="buscador__conteo" id="buscador-conteo" role="status"></p>
+      </div>
+
       <div class="tabla-scroll">
-      <table class="tabla-productos">
+      <table class="tabla-productos" id="tabla-productos">
         <caption>Implementos y consumibles disponibles para alquiler</caption>
         <thead>
           <tr>
@@ -54,25 +63,23 @@
             <th scope="col">Condición</th>
             <th scope="col">Existencias</th>
             <th scope="col">Valor de alquiler</th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
-        <tbody>
-          <tr><th scope="row">TAC-001</th><td data-label="Producto">Taco de pool 1,45 m</td><td data-label="Categoría">Implemento de juego</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">8</td><td data-label="Valor de alquiler">$ 12.000</td></tr>
-          <tr><th scope="row">BOL-004</th><td data-label="Producto">Juego de bolas de billar</td><td data-label="Categoría">Implemento de juego</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">3</td><td data-label="Valor de alquiler">$ 45.000</td></tr>
-          <tr><th scope="row">TRI-002</th><td data-label="Producto">Triángulo para bolas</td><td data-label="Categoría">Implemento de juego</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">5</td><td data-label="Valor de alquiler">$ 8.000</td></tr>
-          <tr><th scope="row">TIZ-010</th><td data-label="Producto">Tiza de billar</td><td data-label="Categoría">Consumible</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">24</td><td data-label="Valor de alquiler">$ 2.000</td></tr>
-          <tr><th scope="row">GUA-003</th><td data-label="Producto">Guantes de fibra</td><td data-label="Categoría">Consumible</td><td data-label="Condición">Semi-nuevo</td><td data-label="Existencias">6</td><td data-label="Valor de alquiler">$ 15.000</td></tr>
-          <tr><th scope="row">EXT-005</th><td data-label="Producto">Extensión de taco</td><td data-label="Categoría">Implemento de juego</td><td data-label="Condición">En reparación</td><td data-label="Existencias">1</td><td data-label="Valor de alquiler">$ 10.000</td></tr>
-          <tr><th scope="row">MES-008</th><td data-label="Producto">Mesa de billar 8 pies</td><td data-label="Categoría">Mesa de billar</td><td data-label="Condición">Nuevo</td><td data-label="Existencias">2</td><td data-label="Valor de alquiler">$ 60.000</td></tr>
-        </tbody>
+        <!-- El tbody llega vacío a propósito: el día 8 pide que ninguna fila se
+             escriba a mano en el HTML, y todas las pinta app/productos.js
+             desde js/datos-prueba.js. -->
+        <tbody id="tabla-productos-body"></tbody>
       </table>
       </div>
+
+      <p class="alerta alerta--neutro" id="tabla-vacia" hidden></p>
     </section>
 
     <section>
       <h2>Registro de producto</h2>
 
-      <form action="productos.php" method="post" novalidate>
+      <form action="productos.php" method="post" novalidate id="form-producto">
         <fieldset>
           <legend>Datos del producto</legend>
 
@@ -83,7 +90,9 @@
                  maxlength="7">
 
           <label for="nombre">Nombre del producto</label>
-          <input type="text" id="nombre" name="nombre" required maxlength="60">
+          <input type="text" id="nombre" name="nombre" required
+                 minlength="3" maxlength="60">
+          <p class="campo-error" id="error-nombre" role="alert"></p>
 
           <label for="categoria">Categoría</label>
           <select id="categoria" name="categoria" required>
@@ -93,13 +102,16 @@
             <option value="repuesto">Repuesto</option>
             <option value="mesa">Mesa de billar</option>
           </select>
+          <p class="campo-error" id="error-categoria" role="alert"></p>
 
           <label for="cantidad">Existencias</label>
-          <input type="number" id="cantidad" name="cantidad" required min="1" step="1">
+          <input type="number" id="cantidad" name="cantidad" required min="0" step="1">
+          <p class="campo-error" id="error-cantidad" role="alert"></p>
 
           <label for="valor_alquiler">Valor de alquiler en pesos</label>
           <input type="number" id="valor_alquiler" name="valor_alquiler" required
-                 min="0" step="0.01">
+                 min="0.01" step="0.01">
+          <p class="campo-error" id="error-valor_alquiler" role="alert"></p>
 
           <label for="fecha_ingreso">Fecha de ingreso al inventario</label>
           <input type="date" id="fecha_ingreso" name="fecha_ingreso" required>
@@ -124,7 +136,8 @@
           <label for="reparacion">En reparación</label>
         </fieldset>
 
-        <button type="submit" class="boton">Registrar producto</button>
+        <button type="submit" class="boton" id="boton-guardar">Registrar producto</button>
+        <p class="estado-form" id="estado-form" role="status"></p>
       </form>
     </section>
     </main>
@@ -134,5 +147,12 @@
     </footer>
 
   </div>
+
+  <!-- El orden importa: datos-prueba.js declara la lista de productos y
+       productos.js la necesita para pintar. Los dos archivos de app/ se
+       conectan al DOM, así que van al final, cuando el HTML ya está armado. -->
+  <script src="js/datos-prueba.js"></script>
+  <script src="app/menu.js"></script>
+  <script src="app/productos.js"></script>
 </body>
 </html>

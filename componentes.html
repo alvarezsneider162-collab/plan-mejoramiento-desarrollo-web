@@ -12,10 +12,11 @@
     <input type="checkbox" class="interruptor-menu" id="interruptor-menu" aria-label="Abrir o cerrar el menú lateral">
 
     <header class="panel__barra">
-      <label class="boton-menu" for="interruptor-menu">
+      <button type="button" class="boton-menu" id="boton-menu"
+              aria-expanded="false" aria-controls="menu-lateral">
         <span class="boton-menu__icono" aria-hidden="true"></span>
         <span class="boton-menu__texto">Menú</span>
-      </label>
+      </button>
       <img src="assets/img/logo.svg" alt="La Carambola Dorada">
       <p class="panel__sesion">
         <strong>Guía de estilo</strong> &middot; Día 6
@@ -25,7 +26,7 @@
     <label class="menu-velo" for="interruptor-menu"></label>
 
     <aside class="panel__menu" id="menu-lateral">
-      <label class="menu-cerrar" for="interruptor-menu">Cerrar</label>
+      <button type="button" class="menu-cerrar">Cerrar</button>
       <nav aria-labelledby="menu-titulo-lateral">
         <h2 id="menu-titulo-lateral">Menú principal</h2>
         <ul>
@@ -389,5 +390,7 @@
     </footer>
 
   </div>
+
+  <script src="app/menu.js"></script>
 </body>
 </html>

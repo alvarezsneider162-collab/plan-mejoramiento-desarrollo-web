@@ -264,6 +264,28 @@ textarea[aria-invalid="true"]:focus-visible {
   outline-color: var(--color-error);
 }
 
+/* --------------------------------------------------------------------------
+   6b. Mensaje de error junto al campo — día 8
+   El enunciado pide que el error se vea al lado del campo y no en una ventana
+   alert(), así que hace falta un sitio fijo en la maqueta para el texto. El
+   <p class="campo-error"> va justo debajo de su campo, con role="alert" para
+   que el lector de pantalla lo pronuncie.
+   El elemento SIEMPRE esta en el HTML, aunque este vacio. No se oculta con
+   display:none porque un nodo vacio de este tipo no lo anuncia el lector de
+   pantalla; lo que se hace es quitarle el margen mientras no tenga texto, y
+   como esta vacio no ocupa altura. Por eso el <p> va con :empty y no con la
+   clase, que ademas seria estado en la hoja de estilos y no en el HTML.
+   -------------------------------------------------------------------------- */
+.campo-error {
+  display: block;
+  margin: 0.35rem 0 0.9rem;
+  font-size: var(--tipo-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-error);
+}
+.campo-error:empty { margin: 0; }
+
 input[type="radio"],
 input[type="checkbox"] {
   width: auto;
@@ -321,6 +343,77 @@ input[type="checkbox"] + label {
 .boton--secundario:hover:not(:disabled) { color: var(--color-text-inverse); }
 .boton--secundario:disabled { color: var(--color-text-muted); border-color: var(--border-color); }
 
+/* Botones pequenos de fila — dia 8
+   Son los botones Editar y Eliminar que se dibujan dentro de cada fila de la
+   tabla. Van en su propia regla ".boton-mini" para no tocar ".boton", que es el
+   boton grande de "Registrar producto". */
+.boton-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0.2rem 0.6rem;
+  font-family: inherit;
+  font-size: var(--tipo-xs);
+  font-weight: 600;
+  color: var(--color-marca);
+  background: var(--color-surface);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.boton-mini:hover { color: var(--color-text-inverse); background: var(--color-marca); border-color: var(--color-marca); }
+.boton-mini:active:not(:disabled) { transform: translateY(1px); }
+.boton-mini:focus-visible { outline-color: var(--focus-ring); }
+.boton-mini:disabled {
+  color: var(--color-text-muted);
+  background: var(--color-surface-alt);
+  border-color: var(--border-color);
+  cursor: not-allowed;
+}
+
+/* Variante destructiva: solo cambia el color, el tamano lo pone .boton-mini */
+.boton-peligro { color: var(--color-error); border-color: var(--color-error); }
+.boton-peligro:hover { color: var(--color-text-inverse); background: var(--color-error); border-color: var(--color-error); }
+
+/* Las dos acciones van dentro de un div, y no sueltas dentro del <td>. Razon:
+   en movil la celda es "display: grid" de dos columnas, y cada hijo directo se
+   mete en una celda. Sin el div, el "::before" ocuparia la primera, Editar la
+   segunda, y Eliminar se cairia a una tercera fila. Con el div, la celda tiene
+   exactamente dos hijos: la etiqueta y el grupo de botones. */
+.acciones-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   6c. Buscador en vivo y avisos de estado — dia 8
+   -------------------------------------------------------------------------- */
+.buscador {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.buscador__conteo,
+.estado-form {
+  margin: 0;
+  font-size: var(--tipo-xs);
+  color: var(--color-text-muted);
+}
+.estado-form {
+  margin: 0.8rem 0 0;
+  font-size: var(--tipo-sm);
+  font-weight: 600;
+  color: var(--color-marca);
+}
+/* Mismo truco que .campo-error: el <p> se queda en el HTML siempre, y solo
+   pierde el margen mientras este vacio. */
+.buscador__conteo:empty,
+.estado-form:empty { margin: 0; }
+
 /* --------------------------------------------------------------------------
    8. Botón del menú colapsable
    Solo existe en la base móvil; en lg se oculta, porque en escritorio el
@@ -348,9 +441,9 @@ input[type="checkbox"] + label {
 .boton-menu:hover { background: var(--color-marca); }
 .boton-menu:active { background: var(--color-marca-hover); }
 .boton-menu[aria-expanded="true"] { background: var(--color-marca-hover); }
-/* La regla anterior hoy no la usa nadie: con el interruptor CSS el boton es un
-   <label>, y aria-expanded no es valido ahi. Se conserva a proposito, porque el
-   <button> real del dia 8 la va a usar al marcarlo desde JavaScript. */
+/* La regla anterior no la usaba nadie mientras el boton fue un <label>, porque
+   aria-expanded no es valido ahi. Desde el dia 8 el boton es un <button> de
+   verdad y app/menu.js le marca aria-expanded en cada apertura. */
 .boton-menu__icono {
   display: block;
   width: 1.1rem;
@@ -360,12 +453,15 @@ input[type="checkbox"] + label {
 }
 
 /* --------------------------------------------------------------------------
-   8b. Interruptor del menú SIN JavaScript
+   8b. El interruptor que sigue siendo la verdad del menú
    Un <button> no cambia de estado por sí solo: para eso hace falta JavaScript.
-   Como esta actividad lo resuelve solo con CSS, el control real es un
-   <input type="checkbox"> casi invisible y el <label> hace de botón visible.
+   En el día 6 se resolvio solo con CSS, asi que el control real era un
+   <input type="checkbox"> casi invisible y el <label> hacia de boton visible.
    Al marcar la casilla, el hermano general "~" abre el menú; al desmarcarlo
-   lo cierra. El día 8 se sustituye el label por el <button> real y su JS.
+   lo cierra. El dia 8 el <label> se sustituyo por un <button> real, que
+   dispara exactamente este mismo interruptor desde JavaScript. El checkbox se
+   sigue siendo el estado —no se reescribio el CSS— y lo que se gana es que
+   ahora se llega con la tecla Enter y se puede marcar aria-expanded.
    -------------------------------------------------------------------------- */
 
 /* La casilla se oculta solo de la vista (mismo patrón que el thead) para que
@@ -405,7 +501,11 @@ input[type="checkbox"] + label {
 }
 .interruptor-menu:checked ~ .menu-velo { display: block; }
 
-/* Botón de cerrar dentro del propio menú. */
+/* Botón de cerrar dentro del propio menú.
+   El dia 8 lo paso de <label> a <button>, para que la tecla Enter lo.active.
+   Un <label> no recibe foco ni se activa con el teclado, asi que hace falta
+   font-family: inherit: los <button> no heredan la fuente del cuerpo y sin
+   esto salia con la del navegador. */
 .menu-cerrar {
   display: inline-flex;
   align-items: center;
@@ -413,6 +513,7 @@ input[type="checkbox"] + label {
   min-height: 2.25rem;
   margin-bottom: 0.9rem;
   padding: 0.3rem 0.6rem;
+  font-family: inherit;
   font-size: var(--tipo-xs);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -584,8 +685,15 @@ input[type="checkbox"] + label {
    convierte cada <tr> en una tarjeta: el <th scope="row"> es el titulo y
    cada <td> se muestra como "etiqueta: valor" con content: attr(data-label).
    A partir de md (768 px) vuelve a ser una tabla de verdad.
+   El día 8 añadió una séptima columna, la de Acciones, y con las seis de
+   antes la tabla ya llenaba el ancho. Por eso .tabla-scroll lleva
+   overflow-x: auto como red de seguridad: si el contenido vuelve a pedir
+   más ancho, lo que scrollea es la tabla dentro de su caja y no la página.
    -------------------------------------------------------------------------- */
-.tabla-scroll { min-width: 0; }
+.tabla-scroll {
+  min-width: 0;
+  overflow-x: auto;
+}
 
 .tabla-productos {
   display: block;
@@ -681,6 +789,11 @@ input[type="checkbox"] + label {
 .alerta--error     { border-left-color: var(--color-error); }
 .alerta--info      { border-left-color: var(--color-info); }
 .alerta--neutro    { border-left-color: var(--border-control); }
+/* El aviso de "no hay resultados" lleva hidden y lo quita el JavaScript. Esta
+   regla viene despues de .alerta a proposito, para ganar en el orden: los
+   estilos del autor mandan sobre los del navegador, y si .alerta llegara a
+   declarar display, taparia el hidden y el aviso vacio se veria siempre. */
+.alerta[hidden] { display: none; }
 
 .badge {
   display: inline-flex;
@@ -771,14 +884,18 @@ input[type="checkbox"] + label {
   .tabla-productos tbody th,
   .tabla-productos tbody td {
     display: table-cell;
-    padding: 0.7rem 0.9rem;
+    /* 0.7rem de padding horizontal, y no los 0.9rem de abajo. Con la séptima
+       columna (Acciones) los 0.9remhacian que la tabla pidiera 31 px más de
+       los que hay a 768 px, y eso desbordaba la pagina. Es un ajuste de 2 px
+       por lado que no se nota y deja las siete columnas dentro. */
+    padding: 0.7rem;
     border-bottom: 1px solid var(--border-color);
   }
   .tabla-productos tbody th {
     grid-column: auto;
     display: table-cell;
     margin: 0;
-    padding: 0.7rem 0.9rem;
+    padding: 0.7rem;
     border-bottom: 1px solid var(--border-color);
     font-family: Consolas, 'Courier New', monospace;
     font-size: var(--tipo-sm);
@@ -790,7 +907,10 @@ input[type="checkbox"] + label {
   .tabla-productos tbody tr:last-child td { border-bottom: none; }
 
   .tabla-productos thead th {
-    padding: 0.75rem 0.9rem;
+    /* Mismo ajuste de padding que las celdas del cuerpo: el encabezado manda
+       sobre el ancho de la columna, asi que si el suyo se queda en 0.9rem las
+       siete columnas siguen pidiendo mas de lo que hay. */
+    padding: 0.75rem 0.7rem;
     font-size: var(--tipo-xs);
     font-weight: 700;
     letter-spacing: 0.06em;
