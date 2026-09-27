@@ -414,6 +414,22 @@ input[type="checkbox"] + label {
 .buscador__conteo:empty,
 .estado-form:empty { margin: 0; }
 
+/* La fila del input y el boton Buscar. Sin esto el boton se baja a otra linea
+   y queda pegado al margen; con esto se reparten el ancho. Dia 9, cuando el
+   buscador paso a ser un formulario GET con boton. */
+.buscador__fila {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.buscador__fila .boton { align-self: flex-start; }
+@media (min-width: 40rem) {
+  .buscador__fila { flex-direction: row; }
+  /* El input se come el espacio que sobra y el boton se queda con el suyo. */
+  .buscador__fila input { flex: 1 1 auto; }
+  .buscador__fila .boton { flex: 0 0 auto; }
+}
+
 /* --------------------------------------------------------------------------
    8. Botón del menú colapsable
    Solo existe en la base móvil; en lg se oculta, porque en escritorio el
