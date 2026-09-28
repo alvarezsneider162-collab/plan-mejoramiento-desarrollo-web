@@ -99,19 +99,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    clave NO. Volver a imprimir la clave en el HTML la dejaria escrita en el
    historial del navegador, que es justo lo que se quiere evitar. */
 $correo = esc($_POST['correo'] ?? '');
+
+/* Dia 12, punto 1: lo que le pasa a los parciales. $pantalla vale 'publico', y
+   con eso cabecera.php imprime el <header> simple con el logo en vez de la
+   barra con el boton del menu: esta pantalla no tiene menu lateral, y por eso
+   el interruptor y el boton no tienen que aparecer. El <head>, el logo y el pie
+   si son los mismos que en las pantallas del panel, y por eso salen de aqui y
+   no estan escritos a mano en este archivo. */
+$tituloPagina = 'Ingreso — La Carambola Dorada';
+$pantalla     = 'publico';
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ingreso — La Carambola Dorada</title>
-  <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-  <header>
-    <img src="assets/img/logo.svg" alt="Logo de La Carambola Dorada" width="120">
-  </header>
+
+<?php require __DIR__ . '/app/parciales/cabecera.php'; ?>
 
   <main class="pantalla-ingreso">
     <h1>Ingreso al panel de gestión</h1>
@@ -170,8 +169,4 @@ $correo = esc($_POST['correo'] ?? '');
     fueran distintos, la página serviría para averiguar qué correos existen.</p>
   </main>
 
-  <footer>
-    <p>La Carambola Dorada — Sistema de gestión de salones de billar</p>
-  </footer>
-</body>
-</html>
+<?php require __DIR__ . '/app/parciales/pie.php'; ?>

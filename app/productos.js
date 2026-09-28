@@ -1,22 +1,61 @@
 /* ===========================================================================
    LA CARAMBOLA DORADA - Validacion del formulario de producto
    Archivo: app/productos.js
-   Actividad de recuperacion, dia 8, punto 4, y dia 9
+   Actividad de recuperacion, dia 8 punto 4, dia 9 y dia 13
 
-   QUE CAMBIO EN EL DIA 9, Y POR QUE:
+   QUE CAMBIO EN EL DIA 13, Y POR QUE
+   ---------------------------------------------------------------------------
+   Este archivo hacia tres cosas distintas con el tiempo:
 
-   Este archivo antes hacia tres cosas: pintaba la tabla, filtraba mientras se
-   escribia y manejaba los botones Editar y Eliminar. Las tres dependian del
-   arreglo `productos` que venia de js/datos-prueba.js.
+     dia 8   validaba los cuatro campos del enunciado y pintaba el mensaje
+             junto al campo. Eso no dependia de donde salieran los datos.
 
-   El dia 9 ese archivo desaparece, porque la tabla ahora la lee MySQL desde
-   productos.php. Asi que las tres cosas que quedaban sin datos de origen se
-   fueron con el: la tabla la pinta PHP, la busqueda la hace la consulta
-   preparada, y no hay UPDATE ni DELETE porque el dia 9 no los pide.
+     dia 9   la tabla paso a pintarla PHP desde MySQL, y con ella se fueron el
+             filtrado mientras se escribia y los botones de editar y eliminar
+             de JavaScript. El archivo se quedo solo con la validacion.
 
-   Lo que SI se queda, y no se toca, es la validacion del punto 4 del dia 8: los
-   cuatro mensajes junto al campo. Es la parte del dia 8 que no dependia de los
-   datos de prueba, asi que sigue funcionando igual.
+     dia 13  el formulario por fin guarda, con un INSERT o un UPDATE en el
+             servidor. Y aqui esta el cambio de verdad de este dia:
+
+                 ANTES   evento.preventDefault() SIEMPRE. Se cancelaba el envio
+                         en todos los casos, porque no habia nada que enviar.
+
+                 AHORA   solo se cancela cuando algo esta mal.
+
+   Ese es todo el cambio de comportamiento, y es el que hace que este archivo
+   deje de ser un obstaculo: si esta todo bien, no se toca nada y el navegador
+   envia el POST, que es lo que espera. Si algo esta mal, se cancela, se avisa al
+   lado del campo y el foco se queda en el primero que falla.
+
+   ---------------------------------------------------------------------------
+   POR QUE SE VALIDA IGUAL EN LOS DOS LUGARES, Y POR QUE NO ES DIFICULTAD
+   ---------------------------------------------------------------------------
+   Hay dos validaciones: esta, en el navegador, y la que hace
+   validarProducto() dentro de productos.php, en el servidor. Se puede leer esto
+   como que se repite trabajo, y en parte es: el navegador evita un viaje
+   redondo cuando falta un asterisco.
+
+   Pero la del servidor NO es opcional, por los tres motivos del enunciado:
+
+     1. Con JavaScript desactivado, este archivo no se carga. Lo unico que
+        queda es la validacion del servidor.
+
+     2. Esto se puede esquivar en dos lineas. Quien tenga el teclado delante
+        puede quitar el script, o llamar al POST con curl. Un navegador pide las
+        cosas, un servidor las exige.
+
+     3. Lo que se valida aqui es el CONTENIDO, y el servidor ademas comprueba lo
+        que el navegador no puede saber: que el codigo no este repetido en otro
+        producto, que la categoria exista de verdad en el catalogo y que el
+        correo del cliente no se repita.
+
+   Y por eso los mensajes de los dos lados dicen casi lo mismo, y no lo mismo a
+   proposito: el del navegador esta en "Escribe el nombre", que es una
+   instruccion, y el del servidor esta en "El nombre del producto es
+   obligatorio", que es el hecho que se ha comprobado. Los dos casos del punto 5
+   del enunciado (precio negativo y texto en un campo numerico) estan escritos
+   igual en las dos capas, para que la captura con JavaScript y la captura sin
+   JavaScript enseñen la misma frase.
    =========================================================================== */
 
 (function () {
@@ -29,85 +68,133 @@
   let mostrarErrores = false;
 
   /* --------------------------------------------------------------------
-     Punto 4 del dia 8 - Validación con el mensaje junto al campo
+     LAS REGLAS
      Cada regla trae dos mensajes: uno para el campo vacío y otro para el campo
-     lleno pero con un valor que no vale. La diferencia importa: decir
-     "el valor debe ser mayor que cero" a un campo que está vacío confunde, y
-     la diferencia son dos cadenas.
-     El HTML ya lleva los atributos que valen sin JavaScript (required, minlength,
-     min, step). Lo que añade este código es el texto que se lee.
+     lleno pero con un valor que no vale. La diferencia importa: decir "el valor
+     debe ser mayor que cero" a un campo que está vacío confunde, y la
+     diferencia son dos cadenas.
+
+     El HTML ya lleva novalidate y los atributos que valen sin JavaScript
+     (required, pattern, minlength). Lo que añade este código es el texto que
+     se lee al lado del campo, que es lo que pide el punto 4 del día 8.
+
+     Los nombres de campo son los del formulario de productos.php, y no los del
+     día 8. El día 8 el formulario tenía "cantidad" y "categoria"; ahora se
+     llaman "existencias" y "categoria_id", que son los nombres de las columnas.
      ------------------------------------------------------------------ */
 
   const REGLAS = [
     {
+      campo: "codigo",
+      vacio: "Escribe el código del producto.",
+      /* El patrón se comprueba con la misma expresión que el servidor, así que
+         "tac-1" falla en los dos lados por la misma razón y no uno sí y el
+         otro no. */
+      mensaje: "El código tiene que ser tres letras en mayúscula, un guion y tres dígitos. Ejemplo: TAC-001",
+      revisar: function (valor) {
+        return /^[A-Z]{3}-[0-9]{3}$/.test(valor.toUpperCase()) ? "" : this.mensaje;
+      }
+    },
+    {
       campo: "nombre",
       vacio: "Escribe el nombre del producto.",
-      mensaje: "El nombre necesita al menos tres caracteres."
+      mensaje: "El nombre necesita al menos tres caracteres.",
+      revisar: function (valor) {
+        return valor.trim().length >= 3 ? "" : this.mensaje;
+      }
+    },
+    {
+      campo: "categoria_id",
+      vacio: "Elige una categoría.",
+      mensaje: "Elige una categoría.",
+      /* El <select> lleva una opción vacía de salida, así que solo hay que
+         comprobar que no siga en ella. */
+      revisar: function () { return ""; }
+    },
+    {
+      campo: "existencias",
+      vacio: "Escribe cuántas existencias hay.",
+      /* El caso 3 del punto 5: texto en un campo numérico. El mensaje repite
+         lo que hay en la caja, entre comillas, para que se pueda comparar. */
+      mensaje: "Las existencias tienen que ser un número entero. Escribiste: \u00AB",
+      revisar: function (valor) {
+        return /^\d+$/.test(valor.trim()) ? "" : this.mensaje + valor + "\u00BB.";
+      }
     },
     {
       campo: "valor_alquiler",
       vacio: "Escribe el valor de alquiler.",
-      mensaje: "El valor de alquiler debe ser mayor que cero."
+      /* El caso 2 del punto 5: un precio negativo. */
+      mensaje: "El valor de alquiler tiene que ser mayor que cero: ",
+      revisar: function (valor) {
+        return Number(valor) > 0 ? "" : this.mensaje + valor + " no es un precio.";
+      }
     },
     {
-      campo: "cantidad",
-      vacio: "Escribe cuántas existencias hay.",
-      mensaje: "Las existencias deben ser un entero que no sea negativo, o sea cero o más."
-    },
-    {
-      campo: "categoria",
-      vacio: "Selecciona una categoría.",
-      mensaje: "Selecciona una categoría."
+      campo: "fecha_ingreso",
+      vacio: "Escribe la fecha de ingreso.",
+      /* El type="date" ya no deja escribir un "2026-13-45" en un navegador
+         moderno: el teclado solo ofrece un calendario. Esta regla esta para
+         navegadores viejos y para cuando el campo viene vacio por un POST
+         manipulado. */
+      mensaje: "Esa fecha no existe en el calendario.",
+      revisar: function (valor) {
+        if (valor === "") return this.vacio;
+        const partes = valor.split("-");
+        if (partes.length !== 3) return this.mensaje;
+        const mes = Number(partes[1]);
+        const dia = Number(partes[2]);
+        const anio = Number(partes[0]);
+        const diasDelMes = new Date(anio, mes, 0).getDate();
+        return mes >= 1 && mes <= 12 && dia >= 1 && dia <= diasDelMes ? "" : this.mensaje;
+      }
     }
   ];
 
+  /* Cada regla sabe revisarse. La categoria es el unico caso en el que el
+     mensaje de "vacio" y el de "lleno" son el mismo, asi que se resuelve aqui y
+     no dentro de revisar(): si esta vacia, se avisa, y si tiene algo ya no hay
+     nada que objetar, porque las opciones las puso la base. */
   function revisarCampo(regla) {
-    const valor = form.elements[regla.campo].value;
+    const control = form.elements[regla.campo];
+    if (!control) return "";
+
+    const valor = String(control.value || "").trim();
+
     if (valor === "") return regla.vacio;
 
-    if (regla.campo === "nombre") {
-      return valor.trim().length >= 3 ? "" : regla.mensaje;
-    }
-    if (regla.campo === "valor_alquiler") {
-      return Number(valor) > 0 ? "" : regla.mensaje;
-    }
-    if (regla.campo === "cantidad") {
-      /* Un entero que no sea negativo es solo de dígitos: por eso se prueba
-         con una expresión regular y no con Number(). Number("3.5") es 3.5,
-         que no es un entero, y Number(" ") es 0, que si lo sería. */
-      return /^\d+$/.test(valor.trim()) ? "" : regla.mensaje;
-    }
-    /* La categoría es un <select> con una opción vacía de salida, así que
-       solo hay que comprobar que no siga en esa opción. */
-    return valor === "" ? regla.mensaje : "";
+    return regla.revisar(valor);
   }
 
   function pintarError(regla, mensaje) {
     const control = form.elements[regla.campo];
     const caja = document.getElementById("error-" + regla.campo);
+    if (!control || !caja) return;
 
     caja.textContent = mensaje;
 
     if (mensaje) {
       control.setAttribute("aria-invalid", "true");
       control.setAttribute("aria-describedby", caja.id);
+      control.classList.add("es-invalid");
     } else {
       control.removeAttribute("aria-invalid");
       control.removeAttribute("aria-describedby");
+      control.classList.remove("es-invalid");
     }
 
-    /* setCustomValidity deja la regla también en el propio control, y no solo
-       como texto en la página. El formulario lleva novalidate, así que el
+    /* setCustomValidity deja la regla tambien en el propio control, y no solo
+       como texto en la pagina. El formulario lleva novalidate, asi que el
        navegador no pinta su burbuja: el aviso que se ve es el de al lado. */
     control.setCustomValidity(mensaje);
   }
 
-  /* Revisa las cuatro reglas y devuelve el primer campo que falla, para poder
-     dejar el foco ahí. */
+  /* Revisa todas las reglas y devuelve el primer campo que falla, para poder
+     dejar el foco ahi. */
   function validarTodo() {
     let primero = null;
 
-    REGLAS.forEach((regla) => {
+    REGLAS.forEach(function (regla) {
       const mensaje = revisarCampo(regla);
       pintarError(regla, mensaje);
       if (mensaje && !primero) primero = form.elements[regla.campo];
@@ -121,39 +208,32 @@
      ------------------------------------------------------------------ */
 
   form.addEventListener("submit", function (evento) {
-    /* Siempre se cancela el envío. El dia 9 todavia no hay INSERT: el enunciado
-       no pide guardar, solo leer, asi que el boton revisa los cuatro campos y
-       avisa que el guardado todavia no esta conectado. Cancelar tambien impide
-       que el navegador actué su propio envío y recargue la pagina. */
-    evento.preventDefault();
-
     mostrarErrores = true;
     const primero = validarTodo();
 
+    /* Aqui esta el cambio del dia 13. Antes se llamaba preventDefault() antes
+       de mirar nada, y el envio se cancelaba siempre. Ahora solo se cancela si
+       hay un campo que este mal: */
+
     if (primero) {
+      evento.preventDefault();
       primero.focus();
-      estado.textContent = "Revisa los campos marcados antes de guardar.";
+      if (estado) {
+        estado.textContent = "Revisa los campos marcados antes de guardar.";
+      }
       return;
     }
 
-    /* Las cuatro reglas del enunciado ya pasaron. Quedan los otros
-       obligatorios del formulario —el código y la fecha—, que el enunciado no
-       pide validar. Se usa :invalid para señalar el primero y se le da el
-       foco; no se llama a reportValidity() para que no aparezca ninguna
-       burbuja del navegador, ya que el enunciado pide los avisos junto al
-       campo. */
-    if (!form.checkValidity()) {
-      const culpable = form.querySelector(":invalid");
-      if (culpable) culpable.focus();
-      estado.textContent = "Falta el código o la fecha de ingreso, que también son obligatorios.";
-      return;
+    /* Todo esta bien: no se toca nada y el POST sale. El servidor vuelve a
+       comprobarlo todo, y si encuentra algo que aqui no se puede ver (un codigo
+       repetido, una categoria que no existe) vuelve con el formulario
+       repintado y el error al lado del campo. */
+    if (estado) {
+      estado.textContent = "Guardando\u2026";
     }
-
-    estado.textContent = "Los campos están correctos. El día 9 solo lee de la "
-      + "base de datos: guardar un producto es un INSERT y todavía no está hecho.";
   });
 
-  /* Antes del primer envío no se molesta con mensajes. Después, cada tecla
+  /* Antes del primer envío no se molesta con mensajes. Despues, cada tecla
      vuelve a revisar para que el error se borre solo en cuanto se corrige. */
   const corregir = function () { if (mostrarErrores) validarTodo(); };
   form.addEventListener("input", corregir);

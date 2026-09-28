@@ -625,7 +625,7 @@ input[type="checkbox"] + label {
 .panel__menu.abierto { transform: translateX(0); visibility: visible; }
 
 /* Mismo apertura, pero disparada por el interruptor en vez de por la clase
-   escrita a mano. Las dos formas conviven: componentes.html sigue mostrando
+   escrita a mano. Las dos formas conviven: componentes.php sigue mostrando
    la clase .abierto aplicada a mano, como pide el enunciado. */
 .interruptor-menu:checked ~ .panel__menu {
   transform: translateX(0);
@@ -1018,7 +1018,7 @@ input[type="checkbox"] + label {
 }
 
 /* --------------------------------------------------------------------------
-   14. Clases de demostracion para componentes.html
+   14. Clases de demostracion para componentes.php
    Una captura estatica no puede mostrar :hover ni :active: el navegador
    solo los aplica cuando hay puntero o pulsacion de verdad. Estas clases
    repintan a mano esos mismos estados para que los cinco queden
@@ -1089,6 +1089,16 @@ pre.codigo code {
   font-weight: 600;
   color: var(--color-text-muted);
 }
+
+/* Los datos que son un codigo y no una frase: el numero de pedido, el documento
+   de un cliente, un telefono, un correo, un precio. Van en la tipografia de
+   codigo del proyecto (la misma de pre.codigo) porque los numeros con separador
+   de miles se leen mucho mejor alineados, y porque un documento de identidad no
+   es un texto que se pueda escribir de cualquier manera. */
+.mono {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 0.95em;
+}
 .lista-enlaces {
   display: flex;
   flex-direction: column;
@@ -1115,4 +1125,209 @@ pre.codigo code {
   .tabla-productos tbody th, .tabla-productos tbody td { display: table-cell; }
   .tabla-productos tbody td::before { content: none; }
   .tabla-productos tbody tr:nth-child(even) { background: var(--color-surface); }
+  .paginacion { display: none; }
 }
+
+/* ==========================================================================
+   16. Dia 13: formularios, paginacion y pedidos
+   --------------------------------------------------------------------------
+   Lo que se anade aqui es lo unico que las pantallas del dia 13 necesitan y las
+   de los dias anteriores no tenian. Todo lo demas (campo, boton, alerta, badge,
+   tabla-productos, es-invalid) ya existia y se reutiliza tal cual: los errores
+   de los formularios nuevos salen en un <p class="campo-error"> con el borde
+   rojo puesto por .es-invalid, los mismos de siempre.
+
+   Y se anade en mobile first otra vez, como todo el resto del archivo: sin
+   media query para el telefono y con la de 40rem para arriba. Por debajo de
+   40rem la rejilla del formulario es de una columna y la paginacion se puede
+   romper en dos lineas sin que se salga de la pantalla.
+   ========================================================================== */
+
+/* ---- 16.1 El grupo de un campo ----------------------------------------
+   Antes los formularios del dia 9 tenian el <label>, el input y el <p> de error
+   sueltos, uno detras de otro. Agruparlos permite ponerlos en rejilla con dos
+   lineas, y ademas evita el problema de que el margen de abajo del error empuje
+   al campo siguiente cuando el error no esta: aqui el margen va en el grupo, no
+   en el campo. */
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+}
+.campo-grupo label {
+  font-size: var(--tipo-sm);
+  font-weight: 600;
+}
+.campo-grupo .campo-error {
+  margin: 0.3rem 0 0;
+}
+
+/* La rejilla del formulario: una columna de base, dos desde 40rem. El ancho de
+   cada columna se reparte con 1fr porque las dos valen lo mismo, y el hueco
+   vertical lo pone el gap, no un margin-bottom por campo (que ademas se
+   acumularia con el del error). */
+.formulario__rejilla {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem 1.2rem;
+  align-items: start;
+}
+@media (min-width: 40rem) {
+  .formulario__rejilla { grid-template-columns: 1fr 1fr; }
+}
+/* La descripcion ocupa las dos columnas: es el unico campo que es un bloque de
+   texto largo, y en media columna queda una franja estrecha incomoda de leer. */
+.campo-grupo--ancho { grid-column: 1 / -1; }
+
+.formulario__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+/* ---- 16.2 La paginacion ------------------------------------------------
+   Una fila de enlaces con el mismo aspecto que los botones secundarios. El
+   numero de la pagina actual no es un enlace: es aria-current="page" y una
+   clase aparte, para que un lector de pantalla anuncie "pagina actual" y para
+   que el cursor de la mano no invite a pulsarlo. */
+.paginacion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin: 1rem 0 1.6rem;
+}
+.paginacion__enlace {
+  display: inline-block;
+  min-width: 2.4rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: var(--tipo-sm);
+  text-align: center;
+  text-decoration: none;
+}
+.paginacion__enlace:hover {
+  border-color: var(--color-marca);
+  color: var(--color-marca);
+}
+.paginacion__enlace--actual {
+  background: var(--color-marca);
+  border-color: var(--color-marca);
+  color: #fff;
+  font-weight: 700;
+  cursor: default;
+}
+
+/* ---- 16.3 El filtro de estado -------------------------------------------
+   Es una fila de enlaces, no un <select>: con enlaces se cambia de vista con el
+   teclado y sin JavaScript, y ademas la URL queda compartida y se puede copiar.
+   El que esta activo se marca con aria-current, que es lo que lee el lector de
+   pantalla, y se pinta aparte para que se vea de un vistazo. */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+}
+.filtros__titulo {
+  color: var(--color-text-muted);
+  font-size: var(--tipo-sm);
+}
+.filtros__enlace {
+  display: inline-block;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: var(--tipo-sm);
+  text-decoration: none;
+}
+.filtros__enlace:hover {
+  border-color: var(--color-marca);
+  color: var(--color-marca);
+}
+.filtros__enlace--activo {
+  background: var(--color-marca);
+  border-color: var(--color-marca);
+  color: var(--color-text-inverse);
+  font-weight: 700;
+}
+
+/* ---- 16.4 Las cabeceras que ordenan -------------------------------------
+   El <th> con un <a> dentro ya es pulsable, asi que lo unico que hace falta es
+   que el enlace no salga azul por defecto y que herede el tamano del titulo de
+   columna. La flechita (un caracter, ↑ o ↓) la pone la pagina. */
+.tabla-productos th a {
+  color: inherit;
+  text-decoration: none;
+}
+.tabla-productos th a:hover {
+  color: var(--color-marca);
+  text-decoration: underline;
+}
+/* El boton de desactivar es el unico con borde rojo de la fila, y va en un
+   formulario propio: el <form> no puede ir dentro de otro <form>, y por eso la
+   celda de acciones es una tabla de hecho, no un adorno. */
+.acciones-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+.acciones-fila form { margin: 0; }
+
+/* ---- 16.5 El detalle de un pedido --------------------------------------
+   La cabecera del pedido va en una tarjeta y las lineas en otra, porque no son
+   la misma cosa: la cabecera son datos de una persona y las lineas son lo que
+   se llevo. El total va aparte y en grande, que es lo unico que se mira. */
+.pedido-cabecera {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem 1.2rem;
+  margin: 0 0 1.2rem;
+}
+@media (min-width: 40rem) {
+  .pedido-cabecera { grid-template-columns: repeat(2, 1fr); }
+}
+.pedido-cabecera dt { font-size: var(--tipo-xs); font-weight: 600; color: var(--color-text-muted); }
+.pedido-cabecera dd { margin: 0 0 0.4rem; font-size: var(--tipo-sm); }
+
+.pedido-total {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 1.2rem;
+  padding-top: 0.9rem;
+  border-top: 2px solid var(--border-color);
+}
+.pedido-total__numero {
+  font-size: var(--tipo-xl);
+  font-weight: 700;
+  color: var(--color-marca);
+}
+
+/* ---- 16.6 Las lineas del formulario de pedido ---------------------------
+   El enunciado del dia 13 pide cuatro lineas de detalle. Se pintan como un
+   <table> porque son columnas de verdad (producto, unidades, precio, subtotal)
+   y una tabla ya sabe alinearlas; con cuatro <div> habria que calcular el
+   ancho de cada uno a mano. En el telefono se desliza con .tabla-scroll, que
+   ya existe. */
+.lineas-pedido input,
+.lineas-pedido select {
+  min-width: 7rem;
+}
+.lineas-pedido .campo-error { margin: 0.2rem 0 0; }
+
+/* El boton de anadir linea es un boton normal, y anadir lineas con JavaScript
+   es una mejora, no un requisito: sin JavaScript se ven las cuatro lineas
+   fijas y el pedido se puede hacer igual. Por eso no hay ninguna linea oculta
+   esperando a que un script la rellene. */
