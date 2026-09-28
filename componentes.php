@@ -1,44 +1,56 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Componentes — La Carambola Dorada</title>
-  <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-  <div class="panel">
+<?php
+declare(strict_types=1);
 
-    <input type="checkbox" class="interruptor-menu" id="interruptor-menu" aria-label="Abrir o cerrar el menú lateral">
+/* ===========================================================================
+   LA CARAMBOLA DORADA - Guia de estilo
+   Archivo: componentes.php
+   Actividad de recuperacion, dia 6 (creada) y dia 12 (reescrita con parciales)
 
-    <header class="panel__barra">
-      <button type="button" class="boton-menu" id="boton-menu"
-              aria-expanded="false" aria-controls="menu-lateral">
-        <span class="boton-menu__icono" aria-hidden="true"></span>
-        <span class="boton-menu__texto">Menú</span>
-      </button>
-      <img src="assets/img/logo.svg" alt="La Carambola Dorada">
-      <p class="panel__sesion">
-        <strong>Guía de estilo</strong> &middot; Día 6
-      </p>
-    </header>
+   ESTE ARCHIVO SE LLAMABA componentes.html HASTA EL DIA 12
+   ---------------------------------------------------------------------------
+   Era el unico archivo del panel que no era .php, y por eso no podia usar los
+   parciales: un .html lo entrega Apache tal cual, sin ejecutar nada, y un
+   require es codigo de PHP. Es el mismo motivo por el que dashboard.html se
+   llamo dashboard.php en el dia 11.
 
-    <label class="menu-velo" for="interruptor-menu"></label>
+   El contenido de la pagina es el mismo del dia 6, sin tocar una linea: los
+   cinco puntos de quiebre, los cinco estados de interaccion, los cinco estados
+   de aviso, la tabla que se vuelve tarjetas en el telefono y el menu con su
+   clase .abierto escrita a mano. Lo unico que cambio es lo de alrededor: el
+   <head>, la barra, el menu y el pie.
 
-    <aside class="panel__menu" id="menu-lateral">
-      <button type="button" class="menu-cerrar">Cerrar</button>
-      <nav aria-labelledby="menu-titulo-lateral">
-        <h2 id="menu-titulo-lateral">Menú principal</h2>
-        <ul>
-          <li><a href="dashboard.php">Tablero</a></li>
-          <li><a href="productos.php">Productos</a></li>
-          <li><a href="componentes.html" aria-current="page">Componentes</a></li>
-          <li><a href="usuarios.php">Usuarios</a></li>
-          <li><a href="login.php">Ingreso</a></li>
-          <li><a href="salir.php">Cerrar sesi&oacute;n</a></li>
-        </ul>
-      </nav>
-    </aside>
+   ---------------------------------------------------------------------------
+   POR QUE AHORA ES PRIVADA
+   ---------------------------------------------------------------------------
+   Antes se podia abrir sin sesion, y el menu de al lado lo decia: era una
+   pantalla mas del panel. Con el menu de app/config/menu.php esta entrada la
+   ven los tres roles, o sea, solo quien ya entro, asi que se le pone el guardian
+   como a las demas pantallas del panel. Si se dejara abierta, bastaria con
+   escribir la URL para leerla sin entrar, y entonces el menu estaria mintiendo
+   sobre quien puede ver que.
+
+   ---------------------------------------------------------------------------
+   POR QUE ESTA PAGINA NO USA LA ETIQUETA DE LA BARRA
+   ---------------------------------------------------------------------------
+   Si la usa, y es "Guia de estilo", que es lo que ponia a mano antes. La
+   escriben $etiqueta y $itemActual, y las dos las leen los parciales: la
+   primera la pinta barra.php y la segunda es la que marca el activo del menu.
+   =========================================================================== */
+
+/* El guardian va el primero, antes de la cabecera HTML, por la misma razon que
+   en dashboard.php: header() y Set-Cookie tienen que salir antes del primer
+   byte, o el 302 al ingreso no se manda. */
+require_once __DIR__ . '/app/seguridad/guardia.php';
+
+/* Lo que le pasa a los parciales. */
+$tituloPagina = 'Componentes — La Carambola Dorada';
+$etiqueta     = 'Gu&iacute;a de estilo';
+$itemActual   = 'componentes';
+?>
+
+<?php require __DIR__ . '/app/parciales/cabecera.php'; ?>
+
+<?php require __DIR__ . '/app/parciales/menu.php'; ?>
 
     <main class="panel__contenido">
       <h1>Componentes</h1>
@@ -386,13 +398,10 @@
       </section>
 
     </main>
+<?php /* El pie de esta pagina es el suyo: la guia de estilo no es una pantalla
+        del salon, y por eso no dice "Sistema de gestion de salones de billar". */
+$textoPie    = 'La Carambola Dorada &mdash; Gu&iacute;a de estilo de componentes';
+$scriptsExtra = '<script src="app/menu.js"></script>';
 
-    <footer class="panel__pie">
-      <p>La Carambola Dorada — Guía de estilo de componentes</p>
-    </footer>
-
-  </div>
-
-  <script src="app/menu.js"></script>
-</body>
-</html>
+require __DIR__ . '/app/parciales/pie.php';
+?>

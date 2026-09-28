@@ -54,23 +54,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 /* Lo que se vuelve a poner en el formulario cuando hay errores, para que la
    persona no tenga que escribirlo todo otra vez. La clave NO se vuelve a
-   poner: recargarla en el HTML la dejaria en el historial del navegador. */
+   poner: recargarla en el HTML la dejaria escrita en el historial del navegador. */
 $nombre = esc($_POST['nombre'] ?? '');
 $correo = esc($_POST['correo'] ?? '');
 $rol    = esc($_POST['rol'] ?? '');
+
+/* Dia 12, punto 1: lo que le pasa a los parciales. Es una pantalla publica, sin
+   sesion que comprobar y sin menu lateral, asi que $pantalla vale 'publico' y
+   cabecera.php imprime el <header> simple con el logo. El <head> y el pie son
+   los mismos que en el resto del proyecto. */
+$tituloPagina = 'Registro de usuario — La Carambola Dorada';
+$pantalla     = 'publico';
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Registro de usuario &mdash; La Carambola Dorada</title>
-  <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-  <header>
-    <img src="assets/img/logo.svg" alt="Logo de La Carambola Dorada" width="120">
-  </header>
+
+<?php require __DIR__ . '/app/parciales/cabecera.php'; ?>
 
   <main class="pantalla-ingreso">
     <h1>Registrar usuario</h1>
@@ -141,8 +138,4 @@ $rol    = esc($_POST['rol'] ?? '');
     <p><a class="enlace" href="login.php">Ya tengo cuenta, quiero entrar</a></p>
   </main>
 
-  <footer>
-    <p>La Carambola Dorada &mdash; Sistema de gestión de salones de billar</p>
-  </footer>
-</body>
-</html>
+<?php require __DIR__ . '/app/parciales/pie.php'; ?>

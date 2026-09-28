@@ -74,19 +74,21 @@ if ($esPost) {
 /* El token se pide DESPUES de la comprobacion, para que en el caso de un token
    invalido se quede el que hay en la sesion y el boton siga sirviendo. */
 $token = tokenCsrf();
+
+/* Dia 12, punto 1: lo que le pasa a los parciales. Pantalla publica sin menu
+   lateral, igual que el ingreso y el registro: con $pantalla en 'publico',
+   cabecera.php imprime el <header> simple con el logo y pie.php cierra el
+   documento sin el <div class="panel">.
+
+   Y el titulo sale de la misma variable que $titulo, que se eligio mas arriba
+   segun el caso: si se llego por GET sale "Cerrar la sesion" y si el token no
+   cuadraba sale "No se pudo cerrar la sesion". Antes el <title> lo repetia a
+   mano con el mismo texto. */
+$tituloPagina = $titulo . ' — La Carambola Dorada';
+$pantalla     = 'publico';
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= esc($titulo) ?> — La Carambola Dorada</title>
-  <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-  <header>
-    <img src="assets/img/logo.svg" alt="Logo de La Carambola Dorada" width="120">
-  </header>
+
+<?php require __DIR__ . '/app/parciales/cabecera.php'; ?>
 
   <main class="pantalla-ingreso">
     <h1><?= esc($titulo) ?></h1>
@@ -106,8 +108,4 @@ $token = tokenCsrf();
     <p><a class="enlace" href="<?= esc(urlApp('login.php')) ?>">Volver al ingreso</a></p>
   </main>
 
-  <footer>
-    <p>La Carambola Dorada — Sistema de gestión de salones de billar</p>
-  </footer>
-</body>
-</html>
+<?php require __DIR__ . '/app/parciales/pie.php'; ?>

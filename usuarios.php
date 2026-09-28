@@ -89,60 +89,20 @@ function claseEstado(int $activo): string
 {
     return $activo === 1 ? 'badge--exito' : 'badge--neutro';
 }
+
+/* Lo que le pasa a los parciales. La clave 'usuarios' es la que el menu
+   compara con cada entrada del arreglo para marcar este enlace como el
+   activo, y es tambien la que hace que esta entrada solo se pinte para el
+   administrador: los otros dos roles no la ven en el menu, y si la escriben
+   a mano reciben el 403 de exigirRol() de arriba. */
+$tituloPagina = 'Usuarios — La Carambola Dorada';
+$etiqueta     = 'Usuarios';
+$itemActual   = 'usuarios';
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Usuarios — La Carambola Dorada</title>
-  <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-  <div class="panel">
 
-    <input type="checkbox" class="interruptor-menu" id="interruptor-menu" aria-label="Abrir o cerrar el menú lateral">
+<?php require __DIR__ . '/app/parciales/cabecera.php'; ?>
 
-    <header class="panel__barra">
-      <button type="button" class="boton-menu" id="boton-menu"
-              aria-expanded="false" aria-controls="menu-lateral">
-        <span class="boton-menu__icono" aria-hidden="true"></span>
-        <span class="boton-menu__texto">Menú</span>
-      </button>
-      <img src="assets/img/logo.svg" alt="La Carambola Dorada">
-      <?php
-      /* El parcial se incluye aqui y no arriba del archivo, con la etiqueta ya
-         puesta, y se incluye con require y NO con require_once.
-
-         Si arriba del archivo hubiera un require_once de este parcial, se
-         ejecutaria en ese momento, cuando $etiqueta todavia no vale nada, y
-         pintaria la barra con la etiqueta vacia. Y este require de aqui ya no
-         haria nada, porque el require_once de arriba se habria gastado la
-         inclusion: la barra se quedaria como la pintara el primero.
-
-         Es el mismo aviso que en productos.php, donde paso lo mismo con la otra
-         copia de esc() antes de que el dia 11 le pusiera el guardian encima. */
-      $etiqueta = 'Usuarios';
-      require __DIR__ . '/app/parciales/barra.php';
-      ?>
-    </header>
-
-    <label class="menu-velo" for="interruptor-menu"></label>
-
-    <aside class="panel__menu" id="menu-lateral">
-      <button type="button" class="menu-cerrar">Cerrar</button>
-      <nav aria-labelledby="menu-titulo-lateral">
-        <h2 id="menu-titulo-lateral">Menú principal</h2>
-        <ul>
-          <li><a href="dashboard.php">Tablero</a></li>
-          <li><a href="productos.php">Productos</a></li>
-          <li><a href="componentes.html">Componentes</a></li>
-          <li><a href="usuarios.php" aria-current="page">Usuarios</a></li>
-          <li><a href="login.php">Ingreso</a></li>
-          <li><a href="salir.php">Cerrar sesión</a></li>
-        </ul>
-      </nav>
-    </aside>
+<?php require __DIR__ . '/app/parciales/menu.php'; ?>
 
     <main class="panel__contenido">
       <h1>Usuarios</h1>
@@ -195,12 +155,11 @@ function claseEstado(int $activo): string
       <?php endif; ?>
     </main>
 
-    <footer class="panel__pie">
-      <p>La Carambola Dorada — Sistema de gestión de salones de billar</p>
-    </footer>
+<?php /* El pie y el cierre del documento los pone app/parciales/pie.php, que
+        tambien cierra el <div class="panel"> de la cabecera. El unico script es
+        el del menu, porque esta pantalla no valida ningun formulario: la lista
+        es de solo lectura. */
+$scriptsExtra = '<script src="app/menu.js"></script>';
 
-  </div>
-
-  <script src="app/menu.js"></script>
-</body>
-</html>
+require __DIR__ . '/app/parciales/pie.php';
+?>

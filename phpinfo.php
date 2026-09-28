@@ -5,8 +5,15 @@ declare(strict_types=1);
    version y antes del primer byte de la pagina. Un phpinfo() publica la version
    exacta de PHP, su ruta de instalacion y las extensiones activas: ayuda mucho a
    quien busca fallos contra esa version, asi que ahora, ademas de estar en el
-   .gitignore, hace falta una sesion valida para verlo. */
+   .gitignore, hace falta una sesion valida para verlo.
+
+   Dia 12, punto 2: ademas de sesion, hace falta ser ADMINISTRADOR. Es lo que
+   dice el arreglo de app/config/menu.php: la entrada "Entorno" solo se pinta
+   para el administrador. Un menu que esconde una pantalla no cierra la puerta,
+   asi que la puerta se cierra aqui. Un vendedor o un consultor que escriba
+   esta URL a mano reciben el mismo 403 que si la escribieran en usuarios.php. */
 require_once __DIR__ . '/app/seguridad/guardia.php';
+exigirRol('administrador');
 
 /* Punto 1 del dia 9: comprobar la version de PHP con phpinfo().
    Este archivo es solo una herramienta de comprobacion, por eso esta en el
@@ -23,15 +30,23 @@ $faltan       = array_values(array_filter(
     $extensiones,
     static fn(string $e): bool => !extension_loaded($e)
 ));
-?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Versión de PHP — La Carambola Dorada</title>
-  <link rel="stylesheet" href="css/estilos.css">
-  <style>
+
+/* Dia 12, punto 1: lo que le pasa a los parciales. Esta pagina SI lleva el menu
+   lateral, al reves que antes: el menu se pinta desde el arreglo, y el que
+   decide si aparece es $pantalla, que en cabecera.php vale 'panel' por defecto.
+   Antes el <header> se quedaba aqui a mano porque, segun decia el comentario
+   del dia 11, "esta hoja de datos no tiene menu lateral". Con el menu escrito
+   como datos, la pregunta correcta no es "esta pagina lleva menu" sino "que
+   claves de menu tiene esta pagina", y la de esta es 'entorno'. Un sitio que
+   lee la version de PHP es parte del panel, no un papel suelto. */
+$tituloPagina = 'Versión de PHP — La Carambola Dorada';
+$etiqueta     = 'Entorno';
+$itemActual   = 'entorno';
+
+/* Esta pagina tiene un <style> propio, y por eso cabecera.php recibe el bloque
+   entero en $estilosExtra y lo imprime dentro del <head>. Es la unica pagina
+   del proyecto que lo necesita: las demas usan solo la hoja de estilos comun. */
+$estilosExtra = <<<'CSS'
     .ficha { background: var(--color-surface); border: 1px solid var(--border-color);
              border-radius: 8px; padding: 1.2rem; margin: 0 0 1.2rem; }
     .ficha dl { display: grid; gap: .4rem 1rem; margin: 0; }
@@ -43,20 +58,12 @@ $faltan       = array_values(array_filter(
                  font-family: var(--tipo-sm); }
     .veredicto--bien { color: var(--color-success); background: var(--color-marca-light); }
     .veredicto--mal  { color: var(--color-error);   background: var(--color-surface-alt); }
-  </style>
-</head>
-<body>
-  <div class="panel">
-    <header class="panel__barra">
-      <img src="assets/img/logo.svg" alt="La Carambola Dorada">
-      <?php
-      /* Mismo parcial que el resto de pantallas del panel. Esta hoja de datos no
-         tiene menu lateral, asi que el parcial solo aporta el parrafo de la
-         sesion y el <header> se queda aqui. */
-      $etiqueta = 'Entorno';
-      require __DIR__ . '/app/parciales/barra.php';
-      ?>
-    </header>
+CSS;
+?>
+
+<?php require __DIR__ . '/app/parciales/cabecera.php'; ?>
+
+<?php require __DIR__ . '/app/parciales/menu.php'; ?>
 
     <main class="panel__contenido">
       <h1>Versión de PHP</h1>
@@ -121,6 +128,9 @@ $faltan       = array_values(array_filter(
         </div>
       </section>
     </main>
-  </div>
-</body>
-</html>
+
+<?php /* El pie y el cierre del documento, como en las demas pantallas del panel.
+        Esta pagina no tiene ningun script: no hay boton que conectar ni
+        formulario que validar. */
+require __DIR__ . '/app/parciales/pie.php';
+?>
